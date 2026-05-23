@@ -4,7 +4,8 @@ A simple game engine
 
 ## Purpose
 
-Developing your own game engine is a nice way to improve your programmer skill. Please read the [DevLog section](docs/devlog/devlog.md)
+Developing your own game engine is a nice way to improve your programmer skill.
+Please read the [DevLog section](docs/devlog/devlog.md)
 
 ## Features
 
@@ -16,12 +17,13 @@ It also uses STL as logn as it's possible.
 | Library                                    | Description              | License |
 |--------------------------------------------|--------------------------|---------|
 | [spdlog](https://github.com/gabime/spdlog) | Fast C++ logging library | MIT     |
+| [GLFW](https://github.com/glfw/glfw) | Multi-platform library for OpenGL and Vulkan development on the desktop. | zlib |
 
 ## Building
 
 Requirements:
-* CMake version at least 3.20
-* C++ compiler supports C++17 standard
+* CMake version 3.20 and newer
+* C++ compiler supporting C++17 standard
 
 Clone this repository:
 ```
