@@ -13,22 +13,26 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw ${CMAKE_CURRENT_BINARY_DIR}/glfw)
 
+# glad
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
+
 # ================= Engine building ===================
 set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Application.hpp
     include/pioneer/Support.hpp
     include/pioneer/Logger.hpp
 )
-#set(PIONEER_PRIVATE_INCLUDES
-#    ${CMAKE_CURRENT_SOURCE_DIR}/src/support.h
-#)
+set(PIONEER_PRIVATE_INCLUDES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.hpp
+)
 set(PIONEER_PRIVATE_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp
     src/Logger.cpp
+    src/Window.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
-    #${PIONEER_PRIVATE_INCLUDES}
+    ${PIONEER_PRIVATE_INCLUDES}
     ${PIONEER_PRIVATE_SOURCES}
 )
 set_target_properties(${PROJECT_NAME}
@@ -50,4 +54,5 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE
     spdlog
     glfw
+    glad
 )

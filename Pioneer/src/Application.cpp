@@ -18,23 +18,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 ***************************************************************************** */
 
 #include <pioneer/Application.hpp>
-
-#include <iostream>
+#include <pioneer/Logger.hpp>
+#include <Window.hpp>
 
 namespace Pioneer
 {
 
 Application::Application()
 {
+    PNR_CORE_INFO("[Application] Starting");
+    m_windowShouldClose = false;
 }
 
 Application::~Application()
 {
+    PNR_CORE_INFO("[Application] Closing");
 }
 
-void Application::exec()
+int Application::exec()
 {
-    std::cout << "Hello, Application" << std::endl;
+    p_window = std::make_unique<Window>(1280, 720, "Hello");    // TODO
+    while (!m_windowShouldClose)
+    {
+        p_window->onUpdate();
+        onUpdate();
+    }
+
+    p_window = nullptr;
+    return 0;
 }
 
 }

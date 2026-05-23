@@ -17,38 +17,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#ifndef PIONEER_APPLICATION_HPP
-#define PIONEER_APPLICATION_HPP
+struct GLFWwindow;
 
 #include <pioneer/Support.hpp>
 
-#include <memory>
+#include <string>
 
 namespace Pioneer
 {
 
-class PIONEER_API Application
+class Window
 {
 public:
-    Application();
-    virtual ~Application();
+    Window(unsigned int width, unsigned int height, const std::string &title);
+    ~Window();
 
-    virtual int exec();
-
-    virtual void onUpdate() {}
-
-private:
-    std::unique_ptr<class Window> p_window;
-
-    bool m_windowShouldClose;
+    void onUpdate();
+    unsigned int width() const { return m_data.width; }
+    unsigned int height() const { return m_data.height; }
 
 private:
-    Application(const Application&) = delete;
-    Application(Application &&) = delete;
-    Application &operator=(const Application &) = delete;
-    Application &operator=(Application &&) = delete;
+    struct WindowData
+    {
+        unsigned int width;
+        unsigned int height;
+        std::string title;
+        // TODO: Event cb
+    };
+
+    int init();
+
+    GLFWwindow *m_windowID;
+    WindowData m_data;
+
+private:
+    Window(const Window &) = delete;
+    Window(Window &&) = delete;
+    Window &operator=(const Window &) = delete;
+    Window &operator=(Window &&) = delete;
 };
 
 }
-
-#endif // !PIONEER_APPLICATION_HPP

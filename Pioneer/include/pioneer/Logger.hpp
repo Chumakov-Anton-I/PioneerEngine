@@ -43,18 +43,35 @@ private:
 
 }
 
+#ifndef NDEBUG
 // Core log macroses
 #define PNR_CORE_TRACE(...) ::Pioneer::Logger::coreLogger()->trace(__VA_ARGS__)
 #define PNR_CORE_INFO(...)  ::Pioneer::Logger::coreLogger()->info(__VA_ARGS__)
 #define PNR_CORE_WARN(...)  ::Pioneer::Logger::coreLogger()->warn(__VA_ARGS__)
 #define PNR_CORE_ERROR(...) ::Pioneer::Logger::coreLogger()->error(__VA_ARGS__)
-#define PNR_CORE_FATAL(...) ::Pioneer::Logger::coreLogger()->fatal(__VA_ARGS__)
+#define PNR_CORE_FATAL(...) ::Pioneer::Logger::coreLogger()->critical(__VA_ARGS__)
 
 // Client log macroses
 #define PNR_TRACE(...)      ::Pioneer::Logger::clientLogger()->trace(__VA_ARGS__)
 #define PNR_INFO(...)       ::Pioneer::Logger::clientLogger()->info(__VA_ARGS__)
 #define PNR_WARN(...)       ::Pioneer::Logger::clientLogger()->warn(__VA_ARGS__)
 #define PNR_ERROR(...)      ::Pioneer::Logger::clientLogger()->error(__VA_ARGS__)
-#define PNR_FATAL(...)      ::Pioneer::Logger::clientLogger()->fatal(__VA_ARGS__)
+#define PNR_FATAL(...)      ::Pioneer::Logger::clientLogger()->critical(__VA_ARGS__)
+
+#else
+
+#define PNR_CORE_TRACE(...)
+#define PNR_CORE_INFO(...)
+#define PNR_CORE_WARN(...)
+#define PNR_CORE_ERROR(...)
+#define PNR_CORE_FATAL(...)
+
+#define PNR_TRACE(...)
+#define PNR_INFO(...)
+#define PNR_WARN(...)
+#define PNR_ERROR(...)
+#define PNR_FATAL(...)
+
+#endif // !NDEBUG
 
 #endif // !PIONEER_LOGGER_HPP

@@ -26,11 +26,6 @@ class EditorApp final : public Pioneer::Application
 public:
     EditorApp() : Application() {}
     ~EditorApp() override {}
-
-    void exec() override
-    {
-        std::cout << "Hello, Editor" << std::endl;
-    }
 };
 
 int main(int argc, char *argv[])
