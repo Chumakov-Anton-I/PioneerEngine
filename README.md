@@ -11,6 +11,12 @@ Developing your own game engine is a nice way to improve your programmer skill. 
 **PioneerEngine** is a cross-platform application. It uses OpenGL 3.3 and only open-source libraries.
 It also uses STL as logn as it's possible.
 
+### Dependencies
+
+| Library                                    | Description              | License |
+|--------------------------------------------|--------------------------|---------|
+| [spdlog](https://github.com/gabime/spdlog) | Fast C++ logging library | MIT     |
+
 ## Building
 
 Requirements:

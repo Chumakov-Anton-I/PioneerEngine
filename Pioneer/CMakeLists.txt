@@ -3,18 +3,20 @@ cmake_minimum_required(VERSION 3.20)
 project(Pioneer)
 
 # ============== Dependencies building ================
-# ...
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog ${CMAKE_CURRENT_BINARY_DIR}/spdlog)
 
 # ================= Engine building ===================
 set(PIONEER_PUBLIC_INCLUDES
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/pioneer/Application.hpp
+    include/pioneer/Application.hpp
     include/pioneer/Support.hpp
+    include/pioneer/Logger.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES
 #    ${CMAKE_CURRENT_SOURCE_DIR}/src/support.h
 #)
 set(PIONEER_PRIVATE_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp
+    src/Logger.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
@@ -37,3 +39,6 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE        ${CMAKE_CURRENT_SOURCE_DIR}/src #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    spdlog
+)

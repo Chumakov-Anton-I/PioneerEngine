@@ -17,27 +17,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pioneer/Application.hpp>
 #include <pioneer/Logger.hpp>
-#include <iostream>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
-class EditorApp final : public Pioneer::Application
+namespace Pioneer
 {
-public:
-    EditorApp() : Application() {}
-    ~EditorApp() override {}
 
-    void exec() override
-    {
-        std::cout << "Hello, Editor" << std::endl;
-    }
-};
+std::shared_ptr<spdlog::logger> Logger::s_coreLogger;
+std::shared_ptr<spdlog::logger> Logger::s_clientLogger;
 
-int main(int argc, char *argv[])
+void Logger::init()
 {
-    Pioneer::Logger::init();
-    PNR_CORE_WARN("Initialized LOG!");
-    EditorApp app;
-    app.exec();
-    return 0;
+    spdlog::set_pattern("%^[%T] %n %v%$");
+    s_coreLogger = spdlog::stderr_color_mt("PIONEER");
+    s_coreLogger->set_level(spdlog::level::trace);
+    s_clientLogger = spdlog::stdout_color_mt("APP");
+    s_clientLogger->set_level(spdlog::level::trace);
+}
+
 }
