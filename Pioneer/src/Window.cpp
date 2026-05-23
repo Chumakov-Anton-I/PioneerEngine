@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <Window.hpp>
 #include <pioneer/Logger.hpp>
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Pioneer
@@ -60,11 +61,15 @@ int Window::init()
     if (!m_windowID)
     {
         PNR_FATAL("Failed to create GLFW window '{0}' size {1}x{2}", m_data.title, m_data.width, m_data.height);
-        glfwTerminate();
         return -2;
     }
     // TODO: glad
     glfwMakeContextCurrent(m_windowID);
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+    {
+        PNR_CORE_FATAL("Failed to initialize GLAD");
+        return -3;
+    }
 
     return 0;
 }

@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Logger.hpp>
 #include <Window.hpp>
 
+#include <glad/glad.h>
+
 namespace Pioneer
 {
 
@@ -40,6 +42,9 @@ int Application::exec()
     p_window = std::make_unique<Window>(1280, 720, "Hello");    // TODO
     while (!m_windowShouldClose)
     {
+        glClearColor(0.3f, 0.3f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         p_window->onUpdate();
         onUpdate();
     }
