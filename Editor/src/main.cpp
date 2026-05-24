@@ -19,12 +19,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <pioneer/Application.hpp>
 #include <pioneer/Logger.hpp>
-#include <iostream>
+#include <pioneer/Layer.hpp>
+
+class EditorLayer final : public Pioneer::Layer
+{
+public:
+    EditorLayer() : Layer("Example") {}
+    ~EditorLayer() override {}
+
+    void onUpdate() override
+    {
+        PNR_INFO("EditorLayer::Update");
+    }
+};
 
 class EditorApp final : public Pioneer::Application
 {
 public:
-    EditorApp() : Application() {}
+    EditorApp() : Application()
+    {
+        pushLayer(new EditorLayer());
+    }
     ~EditorApp() override {}
 };
 

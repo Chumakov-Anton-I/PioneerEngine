@@ -24,14 +24,18 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Application.hpp
     include/pioneer/Support.hpp
     include/pioneer/Logger.hpp
+    include/pioneer/Layer.hpp
+    include/pioneer/LayerStack.hpp
 )
 set(PIONEER_PRIVATE_INCLUDES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.hpp
+    src/Window.hpp
 )
 set(PIONEER_PRIVATE_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp
+    src/Application.cpp
     src/Logger.cpp
     src/Window.cpp
+    src/Layer.cpp
+    src/LayerStack.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}

@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <pioneer/Application.hpp>
 #include <pioneer/Logger.hpp>
+#include <pioneer/Layer.hpp>
 #include <Window.hpp>
 
 #include <glad/glad.h>
@@ -85,12 +86,24 @@ int Application::exec()
         glClearColor(0.3f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        for (Layer *layer : m_layerStack)
+            layer->onUpdate();
+
         p_window->onUpdate();
-        onUpdate();
     }
 
     p_window = nullptr;
     return 0;
+}
+
+void Application::pushLayer(Layer *layer)
+{
+    m_layerStack.pushLayer(layer);
+}
+
+void Application::pushOverlay(Layer *overlay)
+{
+    m_layerStack.pushOverlay(overlay);
 }
 
 }

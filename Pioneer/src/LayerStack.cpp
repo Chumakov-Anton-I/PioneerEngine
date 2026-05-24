@@ -17,41 +17,50 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#ifndef PIONEER_APPLICATION_HPP
-#define PIONEER_APPLICATION_HPP
-
-#include <pioneer/Support.hpp>
 #include <pioneer/LayerStack.hpp>
+#include <pioneer/Layer.hpp>
 
-#include <memory>
+#include <algorithm>
 
 namespace Pioneer
 {
 
-class PIONEER_API Application
+LayerStack::LayerStack()
 {
-public:
-    Application();
-    virtual ~Application();
-
-    virtual int exec();
-
-    void pushLayer(Layer *layer);
-    void pushOverlay(Layer *overlay);
-
-private:
-    std::unique_ptr<class Window> p_window;
-    bool m_windowShouldClose;
-
-    LayerStack m_layerStack;
-
-private:
-    Application(const Application&) = delete;
-    Application(Application &&) = delete;
-    Application &operator=(const Application &) = delete;
-    Application &operator=(Application &&) = delete;
-};
-
+    m_layerInsert = m_layers.begin();
 }
 
-#endif // !PIONEER_APPLICATION_HPP
+LayerStack::~LayerStack()
+{
+    for (auto *layer : m_layers)
+        delete layer;
+}
+
+void LayerStack::pushLayer(Layer *layer)
+{
+    m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+}
+
+void LayerStack::pushOverlay(Layer *overlay)
+{
+    m_layers.emplace_back(overlay);
+}
+
+void LayerStack::popLayer(Layer *layer)
+{
+    auto it = std::find(m_layers.begin(), m_layers.end(), layer);
+    if (it != m_layers.end())
+    {
+        m_layers.erase(it);
+        m_layerInsert--;
+    }
+}
+
+void LayerStack::popOverlay(Layer *overlay)
+{
+    auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
+    if (it != m_layers.end())
+        m_layers.erase(it);
+}
+
+}

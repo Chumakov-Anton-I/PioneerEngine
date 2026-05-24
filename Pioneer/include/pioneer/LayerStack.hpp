@@ -17,41 +17,37 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#ifndef PIONEER_APPLICATION_HPP
-#define PIONEER_APPLICATION_HPP
+#ifndef PIONEER_LAYER_STACK_HPP
+#define PIONEER_LAYER_STACK_HPP
 
 #include <pioneer/Support.hpp>
-#include <pioneer/LayerStack.hpp>
 
-#include <memory>
+#include <vector>
 
 namespace Pioneer
 {
 
-class PIONEER_API Application
+class PIONEER_API Layer;
+
+class PIONEER_API LayerStack
 {
 public:
-    Application();
-    virtual ~Application();
-
-    virtual int exec();
+    LayerStack();
+    ~LayerStack();
 
     void pushLayer(Layer *layer);
     void pushOverlay(Layer *overlay);
+    void popLayer(Layer *layer);
+    void popOverlay(Layer *overlay);
+
+    std::vector<Layer *>::iterator begin() { return m_layers.begin(); }
+    std::vector<Layer *>::iterator end() { return m_layers.end(); }
 
 private:
-    std::unique_ptr<class Window> p_window;
-    bool m_windowShouldClose;
-
-    LayerStack m_layerStack;
-
-private:
-    Application(const Application&) = delete;
-    Application(Application &&) = delete;
-    Application &operator=(const Application &) = delete;
-    Application &operator=(Application &&) = delete;
+    std::vector<Layer *> m_layers;
+    std::vector<Layer *>::iterator m_layerInsert;
 };
 
 }
 
-#endif // !PIONEER_APPLICATION_HPP
+#endif // !PIONEER_LAYER_STACK_HPP

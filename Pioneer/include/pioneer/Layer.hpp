@@ -17,41 +17,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#ifndef PIONEER_APPLICATION_HPP
-#define PIONEER_APPLICATION_HPP
+#ifndef PIONEER_LAYER_HPP
+#define PIONEER_LAYER_HPP
 
 #include <pioneer/Support.hpp>
-#include <pioneer/LayerStack.hpp>
-
-#include <memory>
+#include <string>
 
 namespace Pioneer
 {
 
-class PIONEER_API Application
+class PIONEER_API Layer
 {
 public:
-    Application();
-    virtual ~Application();
+    Layer(const std::string &name = "Layer");
+    virtual ~Layer();
 
-    virtual int exec();
+    virtual void onAttach() {}
+    virtual void onDetach() {}
+    virtual void onUpdate() {}
 
-    void pushLayer(Layer *layer);
-    void pushOverlay(Layer *overlay);
-
-private:
-    std::unique_ptr<class Window> p_window;
-    bool m_windowShouldClose;
-
-    LayerStack m_layerStack;
+    inline const std::string name() const { return m_debugName; }
 
 private:
-    Application(const Application&) = delete;
-    Application(Application &&) = delete;
-    Application &operator=(const Application &) = delete;
-    Application &operator=(Application &&) = delete;
+    std::string m_debugName;
 };
 
 }
 
-#endif // !PIONEER_APPLICATION_HPP
+#endif // !PIONEER_LAYER_HPP
