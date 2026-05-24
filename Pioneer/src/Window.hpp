@@ -19,7 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 struct GLFWwindow;
 
-//#include <pioneer/Support.hpp>
 #include <sigslot/signal.hpp>
 #include <string>
 
@@ -36,14 +35,19 @@ public:
     unsigned int width() const { return m_data.width; }
     unsigned int height() const { return m_data.height; }
 
-    //template<typename M, typename T>
-    //void signalCloseWindow(M methos, T *object) { signalCloseWindow.connect(method, object); }
-
 //signals:  // technically these are just public variables
     sigslot::signal<GLFWwindow *> signalCloseWindow;
     sigslot::signal<GLFWwindow *, int, int> signalResizeWindow;
+    sigslot::signal<GLFWwindow *, int, int> signalKeyPress;
+    sigslot::signal<GLFWwindow *, int, int> signalKeyRelease;
+    sigslot::signal<GLFWwindow *, int, int> signalKeyRepeat;
+    sigslot::signal<GLFWwindow *, double, double> signalMouseMove;
+    sigslot::signal<GLFWwindow *, int, int> signalMouseButtonPress;
+    sigslot::signal<GLFWwindow *, int, int> signalMouseButtonRelease;
+    sigslot::signal<GLFWwindow *, double, double> signalWheelScroll;
 
 private:
+    // TODO: probably this structure is not necessary
     struct WindowData
     {
         unsigned int width;

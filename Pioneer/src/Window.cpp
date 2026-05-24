@@ -81,7 +81,10 @@ int Window::init()
         [](GLFWwindow *pwnd, int width, int height)
         {
             PNR_INFO("New window size {0}x{1}", width, height);
-            WINDOW_PTR(pwnd)->signalResizeWindow(pwnd, width, height);
+            auto *wnd = WINDOW_PTR(pwnd);
+            wnd->m_data.width = width;
+            wnd->m_data.height = height;
+            wnd->signalResizeWindow(pwnd, width, height);
         });
 
     glfwSetFramebufferSizeCallback(m_windowID,
@@ -90,12 +93,57 @@ int Window::init()
             glViewport(0, 0, width, height);
         });
 
+    glfwSetKeyCallback(m_windowID,
+        [](GLFWwindow *pwnd, int key, int scancode, int action, int mods)
+        {
+            auto *wnd = WINDOW_PTR(pwnd);
+            switch (action)
+            {
+            case GLFW_PRESS:
+                wnd->signalKeyPress(pwnd, key, mods);
+                break;
+            case GLFW_RELEASE:
+                wnd->signalKeyRelease(pwnd, key, mods);
+                break;
+            case GLFW_REPEAT:
+                wnd->signalKeyRepeat(pwnd, key, mods);
+                break;
+            default:
+                break;
+            }
+        });
+
+    glfwSetMouseButtonCallback(m_windowID,
+        [](GLFWwindow *pwnd, int button, int action, int mode)
+        {
+            auto *wnd = WINDOW_PTR(pwnd);
+            switch (action)
+            {
+            case GLFW_PRESS:
+                wnd->signalMouseButtonPress(pwnd, button, mode);
+                break;
+            case GLFW_RELEASE:
+                wnd->signalMouseButtonRelease(pwnd, button, mode);
+                break;
+            }
+        });
+
+    glfwSetCursorPosCallback(m_windowID,
+        [](GLFWwindow *pwnd, double x, double y)
+        {
+            WINDOW_PTR(pwnd)->signalMouseMove(pwnd, x, y);
+        });
+
+    glfwSetScrollCallback(m_windowID,
+        [](GLFWwindow *pwnd, double xOffset, double yOffset)
+        {
+            WINDOW_PTR(pwnd)->signalWheelScroll(pwnd, xOffset, yOffset);
+        });
+
     glfwSetWindowCloseCallback(m_windowID,
         [](GLFWwindow *pwnd)
         {
             PNR_INFO("Window should close");
-            //Window *wnd = static_cast<Window *>(glfwGetWindowUserPointer(pwnd));
-            //wnd->signalCloseWindow(pwnd);
             WINDOW_PTR(pwnd)->signalCloseWindow(pwnd);
         });
 

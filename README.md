@@ -18,6 +18,7 @@ It also uses STL as logn as it's possible.
 |--------------------------------------------|--------------------------|---------|
 | [spdlog](https://github.com/gabime/spdlog) | Fast C++ logging library | MIT     |
 | [GLFW](https://github.com/glfw/glfw) | Multi-platform library for OpenGL and Vulkan development on the desktop. | zlib |
+| [sigslot](https://github.com/palacaze/sigslot) | Header-only, thread safe implementation of signal-slots for C++ | MIT |
 
 ## Building
 

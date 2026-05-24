@@ -51,6 +51,34 @@ int Application::exec()
         {
             m_windowShouldClose = true;
         });
+    p_window->signalKeyPress.connect([&](GLFWwindow *wnd, int key, int mods)
+        {
+            PNR_CORE_TRACE("[Key pressed] Key {0}, mods {1}", key, mods);
+        });
+    p_window->signalKeyRelease.connect([&](GLFWwindow *wnd, int key, int mods)
+        {
+            PNR_CORE_TRACE("[Key released] Key {0}, mods {1}", key, mods);
+        });
+    p_window->signalKeyRepeat.connect([&](GLFWwindow *wnd, int key, int mods)
+        {
+            PNR_CORE_TRACE("[Key repeated] Key {0}, mods {1}", key, mods);
+        });
+    p_window->signalMouseButtonPress.connect([&](GLFWwindow *wnd, int button, int mods)
+        {
+            PNR_CORE_TRACE("[Mouse button pressed] Button {0}", button);
+        });
+    p_window->signalMouseButtonRelease.connect([&](GLFWwindow *wnd, int button, int mods)
+        {
+            PNR_CORE_TRACE("[Mouse button released] Button {0}", button);
+        });
+    p_window->signalMouseMove.connect([&](GLFWwindow *wnd, double x, double y)
+        {
+            //PNR_CORE_TRACE("[Mouse move] ({0}, {1})", x, y);
+        });
+    p_window->signalWheelScroll.connect([&](GLFWwindow *wnd, double xOffset, double yOffset)
+        {
+            //PNR_CORE_TRACE("[Wheel scrolled] deltaY = {0}", yOffset);
+        });
 
     while (!m_windowShouldClose)
     {
