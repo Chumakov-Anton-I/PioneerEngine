@@ -26,6 +26,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+template<typename T>
+constexpr auto WINDOW_PTR(T ptr) { return static_cast<Window *>(glfwGetWindowUserPointer(ptr)); }
+
 Window::Window(unsigned int width, unsigned int height, const std::string &title)
     : m_windowID{nullptr}, m_data{width, height, title}
 {
@@ -63,13 +66,38 @@ int Window::init()
         PNR_FATAL("Failed to create GLFW window '{0}' size {1}x{2}", m_data.title, m_data.width, m_data.height);
         return -2;
     }
-    // TODO: glad
+
     glfwMakeContextCurrent(m_windowID);
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
         PNR_CORE_FATAL("Failed to initialize GLAD");
         return -3;
     }
+
+    // event processing
+    glfwSetWindowUserPointer(m_windowID, this);
+
+    glfwSetWindowSizeCallback(m_windowID,
+        [](GLFWwindow *pwnd, int width, int height)
+        {
+            PNR_INFO("New window size {0}x{1}", width, height);
+            WINDOW_PTR(pwnd)->signalResizeWindow(pwnd, width, height);
+        });
+
+    glfwSetFramebufferSizeCallback(m_windowID,
+        [](GLFWwindow *pwnd, int width, int height)
+        {
+            glViewport(0, 0, width, height);
+        });
+
+    glfwSetWindowCloseCallback(m_windowID,
+        [](GLFWwindow *pwnd)
+        {
+            PNR_INFO("Window should close");
+            //Window *wnd = static_cast<Window *>(glfwGetWindowUserPointer(pwnd));
+            //wnd->signalCloseWindow(pwnd);
+            WINDOW_PTR(pwnd)->signalCloseWindow(pwnd);
+        });
 
     return 0;
 }

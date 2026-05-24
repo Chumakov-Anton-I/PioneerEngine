@@ -19,8 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 struct GLFWwindow;
 
-#include <pioneer/Support.hpp>
-
+//#include <pioneer/Support.hpp>
+#include <sigslot/signal.hpp>
 #include <string>
 
 namespace Pioneer
@@ -36,13 +36,19 @@ public:
     unsigned int width() const { return m_data.width; }
     unsigned int height() const { return m_data.height; }
 
+    //template<typename M, typename T>
+    //void signalCloseWindow(M methos, T *object) { signalCloseWindow.connect(method, object); }
+
+//signals:  // technically these are just public variables
+    sigslot::signal<GLFWwindow *> signalCloseWindow;
+    sigslot::signal<GLFWwindow *, int, int> signalResizeWindow;
+
 private:
     struct WindowData
     {
         unsigned int width;
         unsigned int height;
         std::string title;
-        // TODO: Event cb
     };
 
     int init();

@@ -40,6 +40,18 @@ Application::~Application()
 int Application::exec()
 {
     p_window = std::make_unique<Window>(1280, 720, "Hello");    // TODO
+
+    // connections
+    p_window->signalResizeWindow.connect([&](GLFWwindow *wnd, int width, int height)
+        {
+            PNR_CORE_TRACE("[Resized] Size has been changed to {0}x{1}", width, height);
+        });
+
+    p_window->signalCloseWindow.connect([&](GLFWwindow *wnd)
+        {
+            m_windowShouldClose = true;
+        });
+
     while (!m_windowShouldClose)
     {
         glClearColor(0.3f, 0.3f, 0.5f, 1.0f);

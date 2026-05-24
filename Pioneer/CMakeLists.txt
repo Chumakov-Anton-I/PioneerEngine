@@ -16,6 +16,9 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw ${CMAKE_CURRENT_BINARY_DIR}/g
 # glad
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
 
+# sigslot
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/sigslot ${CMAKE_CURRENT_BINARY_DIR}/sigslot)
+
 # ================= Engine building ===================
 set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Application.hpp
@@ -55,4 +58,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     spdlog
     glfw
     glad
+    Pal::Sigslot
 )
