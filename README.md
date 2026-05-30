@@ -1,6 +1,6 @@
 # PioneerEngine
 
-A simple game engine
+A simple experimental game engine.
 
 ## Purpose
 
@@ -19,6 +19,7 @@ It also uses STL as logn as it's possible.
 | [spdlog](https://github.com/gabime/spdlog) | Fast C++ logging library | MIT     |
 | [GLFW](https://github.com/glfw/glfw) | Multi-platform library for OpenGL and Vulkan development on the desktop. | zlib |
 | [sigslot](https://github.com/palacaze/sigslot) | Header-only, thread safe implementation of signal-slots for C++ | MIT |
+| [Dear ImGui](https://github.com/ocornut/imgui) | Bloat-free graphical user interface library | MIT |
 
 ## Building
 
@@ -41,6 +42,6 @@ md build && cd build
 cmake -S <path-to-source-tree> -B .
 cmake --build .
 ```
-Don't make your **build** directory into the source tree.
+Don't make your **build** directory into the source tree!
 
 You can also open the source tree with your favorite IDE (if it supports CMake projects) and just call the building command.

@@ -28,6 +28,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+class Window;
+
+/// The Application class, an engine application object.
+/// It is a singleton
 class PIONEER_API Application
 {
 public:
@@ -39,11 +43,16 @@ public:
     void pushLayer(Layer *layer);
     void pushOverlay(Layer *overlay);
 
-private:
-    std::unique_ptr<class Window> p_window;
-    bool m_windowShouldClose;
+    inline Window &window() { return *p_window; }
 
+    inline static Application &instance() { return *s_instance; }
+
+private:
+    std::unique_ptr<Window> p_window;
+    bool m_windowShouldClose;
     LayerStack m_layerStack;
+
+    static Application *s_instance;
 
 private:
     Application(const Application&) = delete;

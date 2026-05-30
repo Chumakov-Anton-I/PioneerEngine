@@ -19,6 +19,20 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad ${CMAKE_CURRENT_BINARY_DIR}/g
 # sigslot
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/sigslot ${CMAKE_CURRENT_BINARY_DIR}/sigslot)
 
+# ImGui
+# ImGui's developer doesn't recommend build ImGui as a static or shared library
+# see more: https://github.com/ocornut/imgui/wiki/Getting-Started
+set(IMGUI_SOURCES
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_demo.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_draw.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_tables.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/misc/cpp/imgui_stdlib.cpp
+)
+
 # ================= Engine building ===================
 set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Application.hpp
@@ -26,22 +40,25 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Logger.hpp
     include/pioneer/Layer.hpp
     include/pioneer/LayerStack.hpp
+    include/pioneer/UI/LayerUI.hpp
+    include/pioneer/Window.hpp
 )
-set(PIONEER_PRIVATE_INCLUDES
-    src/Window.hpp
-)
+#set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
     src/Application.cpp
     src/Logger.cpp
     src/Window.cpp
     src/Layer.cpp
     src/LayerStack.cpp
+    src/UI/LayerUI.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
-    ${PIONEER_PRIVATE_INCLUDES}
+#    ${PIONEER_PRIVATE_INCLUDES}
     ${PIONEER_PRIVATE_SOURCES}
+    ${IMGUI_SOURCES}
 )
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/pnrpch.hpp)
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
         C_VISIBILITY_PRESET hidden
@@ -52,10 +69,21 @@ target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         PIONEER_LIBRARY_BUILD
 )
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE
+            PIONEER_ENABLE_ASSERTS
+    )
+endif()
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE        ${CMAKE_CURRENT_SOURCE_DIR}/src #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/external/
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/external/imgui/
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE

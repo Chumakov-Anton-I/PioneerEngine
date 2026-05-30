@@ -17,37 +17,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pioneer/Application.hpp>
-#include <pioneer/Logger.hpp>
-#include <pioneer/Layer.hpp>
-#include <Window.hpp>
+#include <pnrpch.hpp>
 
-#include <glad/glad.h>
+#include <pioneer/Application.hpp>
+#include <pioneer/Layer.hpp>
+#include <pioneer/Window.hpp>
+
+#include <glad/glad.h>  // TODO: move out rendering system from Application class
 
 namespace Pioneer
 {
 
+Application *Application::s_instance = nullptr;
+
 Application::Application()
+    : m_windowShouldClose{false}
 {
-    PNR_CORE_INFO("[Application] Starting");
-    m_windowShouldClose = false;
-}
-
-Application::~Application()
-{
-    PNR_CORE_INFO("[Application] Closing");
-}
-
-int Application::exec()
-{
-    p_window = std::make_unique<Window>(1280, 720, "Hello");    // TODO
+    PNR_CORE_ASSERT(!s_instance, "Application already exists!")
+    s_instance = this;
+    
+    p_window = std::unique_ptr<Window>(Window::create());
 
     // connections
     p_window->signalResizeWindow.connect([&](GLFWwindow *wnd, int width, int height)
         {
             PNR_CORE_TRACE("[Resized] Size has been changed to {0}x{1}", width, height);
         });
-
     p_window->signalCloseWindow.connect([&](GLFWwindow *wnd)
         {
             m_windowShouldClose = true;
@@ -80,7 +75,15 @@ int Application::exec()
         {
             //PNR_CORE_TRACE("[Wheel scrolled] deltaY = {0}", yOffset);
         });
+}
 
+Application::~Application()
+{
+    PNR_CORE_INFO("[Application] Closing");
+}
+
+int Application::exec()
+{
     while (!m_windowShouldClose)
     {
         glClearColor(0.3f, 0.3f, 0.5f, 1.0f);
@@ -99,11 +102,13 @@ int Application::exec()
 void Application::pushLayer(Layer *layer)
 {
     m_layerStack.pushLayer(layer);
+    layer->onAttach();
 }
 
 void Application::pushOverlay(Layer *overlay)
 {
     m_layerStack.pushOverlay(overlay);
+    overlay->onAttach();
 }
 
 }

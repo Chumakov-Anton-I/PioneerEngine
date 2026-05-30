@@ -19,21 +19,42 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 struct GLFWwindow;
 
+#include <pioneer/Support.hpp>
 #include <sigslot/signal.hpp>
 #include <string>
 
 namespace Pioneer
 {
 
-class Window
+struct WindowProps
+{
+    unsigned int Width;
+    unsigned int Height;
+    std::string Title;
+
+    WindowProps(unsigned int width = 1280,
+                unsigned int height = 720,
+                const std::string &title = "Pioneer Engine")
+        : Width{ width }, Height{ height }, Title{ title }
+    {
+    }
+};
+
+class PIONEER_API Window
 {
 public:
-    Window(unsigned int width, unsigned int height, const std::string &title);
+    static Window *create(const WindowProps &props = WindowProps());
+
+    Window(const WindowProps &props);
     ~Window();
 
     void onUpdate();
+
     unsigned int width() const { return m_data.width; }
     unsigned int height() const { return m_data.height; }
+
+    void setVSync(bool enable = true);
+    bool isVSync() const;
 
 //signals:  // technically these are just public variables
     sigslot::signal<GLFWwindow *> signalCloseWindow;
@@ -53,6 +74,7 @@ private:
         unsigned int width;
         unsigned int height;
         std::string title;
+        bool vsync;
     };
 
     int init();

@@ -17,50 +17,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pnrpch.hpp>
+#ifndef PIONEER_UI_LAYERUI_HPP
+#define PIONEER_UI_LAYERUI_HPP
 
-#include <pioneer/LayerStack.hpp>
 #include <pioneer/Layer.hpp>
 
 namespace Pioneer
 {
 
-LayerStack::LayerStack()
+class PIONEER_API LayerUI final : public Layer
 {
-    m_layerInsert = m_layers.begin();
-}
+public:
+    LayerUI();
+    ~LayerUI() override;
 
-LayerStack::~LayerStack()
-{
-    for (Layer *layer : m_layers)
-        delete layer;
-}
+    void onAttach() override;
+    void onDetach() override;
+    void onUpdate() override;
+    // TODO: event processing
 
-void LayerStack::pushLayer(Layer *layer)
-{
-    m_layerInsert = m_layers.emplace(m_layerInsert, layer);
-}
-
-void LayerStack::pushOverlay(Layer *overlay)
-{
-    m_layers.emplace_back(overlay);
-}
-
-void LayerStack::popLayer(Layer *layer)
-{
-    auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-    if (it != m_layers.end())
-    {
-        m_layers.erase(it);
-        m_layerInsert--;
-    }
-}
-
-void LayerStack::popOverlay(Layer *overlay)
-{
-    auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-    if (it != m_layers.end())
-        m_layers.erase(it);
-}
+private:
+    float m_time;
+};
 
 }
+
+#endif // !PIONEER_UI_LAYERUI_HPP

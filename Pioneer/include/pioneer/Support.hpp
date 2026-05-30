@@ -34,4 +34,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #   endif
 #endif
 
+#ifdef PIONEER_ENABLE_ASSERTS
+#   include <cassert>
+#   define PNR_ASSERT(x, ...) { if (!(x)) { PNR_ERROR("Assertion Failed: {0}", __VA_ARGS__); assert(false); } }
+#   define PNR_CORE_ASSERT(x, ...) { if (!(x)) { PNR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); assert(false); } }
+#else
+#   define PNR_ASSERT(x, ...)
+#   define PNR_CORE_ASSERT(x, ...)
+#endif // PIONEER_ENABLE_ASSERTS
+
 #endif // !PIONEER_SUPPORT_HPP

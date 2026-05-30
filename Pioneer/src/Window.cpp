@@ -17,8 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <Window.hpp>
-#include <pioneer/Logger.hpp>
+#include <pnrpch.hpp>
+
+#include <pioneer/Window.hpp>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -29,9 +30,17 @@ namespace Pioneer
 template<typename T>
 constexpr auto WINDOW_PTR(T ptr) { return static_cast<Window *>(glfwGetWindowUserPointer(ptr)); }
 
-Window::Window(unsigned int width, unsigned int height, const std::string &title)
-    : m_windowID{nullptr}, m_data{width, height, title}
+Window *Window::create(const WindowProps &props)
 {
+    return new Window(props);
+}
+
+Window::Window(const WindowProps &props)
+    : m_windowID{nullptr}
+{
+    m_data.title = props.Title;
+    m_data.width = props.Width;
+    m_data.height = props.Height;
     int rv = init();
 }
 
@@ -47,6 +56,21 @@ void Window::onUpdate()
     glfwPollEvents();
 }
 
+void Window::setVSync(bool enable)
+{
+    if (enable)
+        glfwSwapInterval(1);
+    else
+        glfwSwapInterval(0);
+
+    m_data.vsync = enable;
+}
+
+bool Window::isVSync() const
+{
+    return m_data.vsync;
+}
+
 int Window::init()
 {
     glfwSetErrorCallback([](int error_code, const char *description)
@@ -59,6 +83,10 @@ int Window::init()
         PNR_FATAL("Failed to initialize GLFW");
         return -1;  // TODO: create error codes (enum)
     }
+
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     m_windowID = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
     if (!m_windowID)

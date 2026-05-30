@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Application.hpp>
 #include <pioneer/Logger.hpp>
 #include <pioneer/Layer.hpp>
+#include <pioneer/UI/LayerUI.hpp>
 
 class EditorLayer final : public Pioneer::Layer
 {
@@ -39,6 +40,7 @@ public:
     EditorApp() : Application()
     {
         pushLayer(new EditorLayer());
+        pushOverlay(new Pioneer::LayerUI());
     }
     ~EditorApp() override {}
 };

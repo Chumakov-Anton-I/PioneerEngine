@@ -35,6 +35,7 @@ public:
     virtual void onAttach() {}
     virtual void onDetach() {}
     virtual void onUpdate() {}
+    // TODO: events processing
 
     inline const std::string name() const { return m_debugName; }
 
