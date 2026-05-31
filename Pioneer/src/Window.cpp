@@ -84,10 +84,6 @@ int Window::init()
         return -1;  // TODO: create error codes (enum)
     }
 
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     m_windowID = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
     if (!m_windowID)
     {
@@ -96,6 +92,7 @@ int Window::init()
     }
 
     glfwMakeContextCurrent(m_windowID);
+    setVSync(true);
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
         PNR_CORE_FATAL("Failed to initialize GLAD");

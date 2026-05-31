@@ -30,7 +30,7 @@ public:
 
     void onUpdate() override
     {
-        PNR_INFO("EditorLayer::Update");
+        //PNR_INFO("EditorLayer::Update");
     }
 };
 

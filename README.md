@@ -28,16 +28,16 @@ Requirements:
 * C++ compiler supporting C++17 standard
 
 Clone this repository:
-```
+```shell
 git clone git@github.com:Chumakov-Anton-I/PioneerEngine.git
 ```
 or
-```
+```shell
 git clone https://github.com/Chumakov-Anton-I/PioneerEngine.git
 ```
 
 Build the application with CMake:
-```
+```shell
 md build && cd build
 cmake -S <path-to-source-tree> -B .
 cmake --build .

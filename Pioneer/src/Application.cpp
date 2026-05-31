@@ -35,7 +35,7 @@ Application::Application()
 {
     PNR_CORE_ASSERT(!s_instance, "Application already exists!")
     s_instance = this;
-    
+
     p_window = std::unique_ptr<Window>(Window::create());
 
     // connections
