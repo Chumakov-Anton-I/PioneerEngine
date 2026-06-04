@@ -21,6 +21,8 @@ It also uses STL as logn as it's possible.
 | [sigslot](https://github.com/palacaze/sigslot) | Header-only, thread safe implementation of signal-slots for C++ | MIT |
 | [Dear ImGui](https://github.com/ocornut/imgui) | Bloat-free graphical user interface library | MIT |
 
+The all third-party libraries are included as submodules.
+
 ## Building
 
 Requirements:
@@ -29,11 +31,11 @@ Requirements:
 
 Clone this repository:
 ```shell
-git clone git@github.com:Chumakov-Anton-I/PioneerEngine.git
+git clone --recurse-submodules git@github.com:Chumakov-Anton-I/PioneerEngine.git
 ```
 or
 ```shell
-git clone https://github.com/Chumakov-Anton-I/PioneerEngine.git
+git clone --recurse-submodules https://github.com/Chumakov-Anton-I/PioneerEngine.git
 ```
 
 Build the application with CMake:
@@ -42,6 +44,7 @@ md build && cd build
 cmake -S <path-to-source-tree> -B .
 cmake --build .
 ```
-Don't make your **build** directory into the source tree!
+> [!WARNING]
+> Don't make your **build** directory into the source tree!
 
 You can also open the source tree with your favorite IDE (if it supports CMake projects) and just call the building command.

@@ -16,9 +16,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw ${CMAKE_CURRENT_BINARY_DIR}/g
 # glad
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
 
-# sigslot
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/sigslot ${CMAKE_CURRENT_BINARY_DIR}/sigslot)
-
 # ImGui
 # ImGui's developer doesn't recommend build ImGui as a static or shared library
 # see more: https://github.com/ocornut/imgui/wiki/Getting-Started
@@ -40,8 +37,11 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Logger.hpp
     include/pioneer/Layer.hpp
     include/pioneer/LayerStack.hpp
-    include/pioneer/UI/LayerUI.hpp
     include/pioneer/Window.hpp
+    include/pioneer/UI/LayerUI.hpp
+    include/pioneer/Events/Event.hpp
+    include/pioneer/Events/ApplicationEvent.hpp
+    include/pioneer/Events/KeyEvent.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
@@ -90,5 +90,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     spdlog
     glfw
     glad
-    Pal::Sigslot
+    opengl32
 )

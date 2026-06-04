@@ -29,6 +29,8 @@ namespace Pioneer
 {
 
 class Window;
+class Event;
+class WindowCloseEvent;
 
 /// The Application class, an engine application object.
 /// It is a singleton
@@ -40,6 +42,8 @@ public:
 
     virtual int exec();
 
+    void onEvent(Event &e);
+
     void pushLayer(Layer *layer);
     void pushOverlay(Layer *overlay);
 
@@ -48,6 +52,8 @@ public:
     inline static Application &instance() { return *s_instance; }
 
 private:
+    bool onWindowClose(WindowCloseEvent &e);
+
     std::unique_ptr<Window> p_window;
     bool m_windowShouldClose;
     LayerStack m_layerStack;

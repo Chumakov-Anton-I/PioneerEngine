@@ -20,6 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pnrpch.hpp>
 
 #include <pioneer/Window.hpp>
+#include <pioneer/Events/ApplicationEvent.hpp>
+#include <pioneer/Events/MouseEvent.hpp>
+#include <pioneer/Events/KeyEvent.hpp>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -29,6 +32,8 @@ namespace Pioneer
 
 template<typename T>
 constexpr auto WINDOW_PTR(T ptr) { return static_cast<Window *>(glfwGetWindowUserPointer(ptr)); }
+
+#define WINDOW_DATA_PTR(ptr) *static_cast<WindowData *>(glfwGetWindowUserPointer(ptr))
 
 Window *Window::create(const WindowProps &props)
 {
@@ -56,6 +61,11 @@ void Window::onUpdate()
     glfwPollEvents();
 }
 
+void Window::setEventCallback(const EventCallbackFcn &callback)
+{
+    m_data.eventCallback = callback;
+}
+
 void Window::setVSync(bool enable)
 {
     if (enable)
@@ -80,7 +90,7 @@ int Window::init()
 
     if (!glfwInit())
     {
-        PNR_FATAL("Failed to initialize GLFW");
+        PNR_CORE_ASSERT(false, "Failed to initialize GLFW!");
         return -1;  // TODO: create error codes (enum)
     }
 
@@ -100,16 +110,18 @@ int Window::init()
     }
 
     // event processing
-    glfwSetWindowUserPointer(m_windowID, this);
+    glfwSetWindowUserPointer(m_windowID, &m_data);
 
     glfwSetWindowSizeCallback(m_windowID,
         [](GLFWwindow *pwnd, int width, int height)
         {
             PNR_INFO("New window size {0}x{1}", width, height);
-            auto *wnd = WINDOW_PTR(pwnd);
-            wnd->m_data.width = width;
-            wnd->m_data.height = height;
-            wnd->signalResizeWindow(pwnd, width, height);
+            WindowResizeEvent event(width, height);
+
+            auto &data = WINDOW_DATA_PTR(pwnd);
+            data.width = width;
+            data.height = height;
+            data.eventCallback(event);
         });
 
     glfwSetFramebufferSizeCallback(m_windowID,
@@ -121,55 +133,87 @@ int Window::init()
     glfwSetKeyCallback(m_windowID,
         [](GLFWwindow *pwnd, int key, int scancode, int action, int mods)
         {
-            auto *wnd = WINDOW_PTR(pwnd);
+            auto &data = WINDOW_DATA_PTR(pwnd);
+
             switch (action)
             {
-            case GLFW_PRESS:
-                wnd->signalKeyPress(pwnd, key, mods);
-                break;
-            case GLFW_RELEASE:
-                wnd->signalKeyRelease(pwnd, key, mods);
-                break;
-            case GLFW_REPEAT:
-                wnd->signalKeyRepeat(pwnd, key, mods);
-                break;
-            default:
-                break;
+                case GLFW_PRESS:
+                {
+                    KeyPressedEvent event(key, 0);
+                    data.eventCallback(event);
+                    break;
+                }
+                case GLFW_RELEASE:
+                {
+                    KeyReleasedEvent event(key);
+                    data.eventCallback(event);
+                    break;
+                }
+                case GLFW_REPEAT:
+                {
+                    KeyPressedEvent event(key, 1);
+                    break;
+                }
+                default:
+                    break;
             }
+        });
+
+    glfwSetCharCallback(m_windowID,
+        [](GLFWwindow *pwnd, unsigned int keycode)
+        {
+            auto &data = WINDOW_DATA_PTR(pwnd);
+
+            KeyTypedEvent event(keycode);
+            data.eventCallback(event);
         });
 
     glfwSetMouseButtonCallback(m_windowID,
         [](GLFWwindow *pwnd, int button, int action, int mode)
         {
-            auto *wnd = WINDOW_PTR(pwnd);
+            auto &data = WINDOW_DATA_PTR(pwnd);
             switch (action)
             {
-            case GLFW_PRESS:
-                wnd->signalMouseButtonPress(pwnd, button, mode);
-                break;
-            case GLFW_RELEASE:
-                wnd->signalMouseButtonRelease(pwnd, button, mode);
-                break;
+                case GLFW_PRESS:
+                {
+                    MouseButtonPressedEvent event(button);
+                    data.eventCallback(event);
+                    break;
+                }
+                case GLFW_RELEASE:
+                {
+                    MouseButtonReleasedEvent event(button);
+                    data.eventCallback(event);
+                    break;
+                }
             }
         });
 
     glfwSetCursorPosCallback(m_windowID,
         [](GLFWwindow *pwnd, double x, double y)
         {
-            WINDOW_PTR(pwnd)->signalMouseMove(pwnd, x, y);
+            auto &data = WINDOW_DATA_PTR(pwnd);
+
+            MouseMovedEvent event(static_cast<float>(x), static_cast<float>(y));
+            data.eventCallback(event);
         });
 
     glfwSetScrollCallback(m_windowID,
         [](GLFWwindow *pwnd, double xOffset, double yOffset)
         {
-            WINDOW_PTR(pwnd)->signalWheelScroll(pwnd, xOffset, yOffset);
+            auto &data = WINDOW_DATA_PTR(pwnd);
+
+            WheelScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
+            data.eventCallback(event);
         });
 
     glfwSetWindowCloseCallback(m_windowID,
         [](GLFWwindow *pwnd)
         {
             PNR_INFO("Window should close");
-            WINDOW_PTR(pwnd)->signalCloseWindow(pwnd);
+            auto &data = WINDOW_DATA_PTR(pwnd);
+            WindowCloseEvent event;
+            data.eventCallback(event);
         });
 
     return 0;

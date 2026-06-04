@@ -22,6 +22,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Application.hpp>
 #include <pioneer/Layer.hpp>
 #include <pioneer/Window.hpp>
+#include <pioneer/Events/ApplicationEvent.hpp>
+#include <pioneer/Events/KeyEvent.hpp>
+#include <pioneer/Events/MouseEvent.hpp>
 
 #include <glad/glad.h>  // TODO: move out rendering system from Application class
 
@@ -33,48 +36,12 @@ Application *Application::s_instance = nullptr;
 Application::Application()
     : m_windowShouldClose{false}
 {
+    PNR_CORE_INFO("[Application] Creating");
     PNR_CORE_ASSERT(!s_instance, "Application already exists!")
     s_instance = this;
 
     p_window = std::unique_ptr<Window>(Window::create());
-
-    // connections
-    p_window->signalResizeWindow.connect([&](GLFWwindow *wnd, int width, int height)
-        {
-            PNR_CORE_TRACE("[Resized] Size has been changed to {0}x{1}", width, height);
-        });
-    p_window->signalCloseWindow.connect([&](GLFWwindow *wnd)
-        {
-            m_windowShouldClose = true;
-        });
-    p_window->signalKeyPress.connect([&](GLFWwindow *wnd, int key, int mods)
-        {
-            PNR_CORE_TRACE("[Key pressed] Key {0}, mods {1}", key, mods);
-        });
-    p_window->signalKeyRelease.connect([&](GLFWwindow *wnd, int key, int mods)
-        {
-            PNR_CORE_TRACE("[Key released] Key {0}, mods {1}", key, mods);
-        });
-    p_window->signalKeyRepeat.connect([&](GLFWwindow *wnd, int key, int mods)
-        {
-            PNR_CORE_TRACE("[Key repeated] Key {0}, mods {1}", key, mods);
-        });
-    p_window->signalMouseButtonPress.connect([&](GLFWwindow *wnd, int button, int mods)
-        {
-            PNR_CORE_TRACE("[Mouse button pressed] Button {0}", button);
-        });
-    p_window->signalMouseButtonRelease.connect([&](GLFWwindow *wnd, int button, int mods)
-        {
-            PNR_CORE_TRACE("[Mouse button released] Button {0}", button);
-        });
-    p_window->signalMouseMove.connect([&](GLFWwindow *wnd, double x, double y)
-        {
-            //PNR_CORE_TRACE("[Mouse move] ({0}, {1})", x, y);
-        });
-    p_window->signalWheelScroll.connect([&](GLFWwindow *wnd, double xOffset, double yOffset)
-        {
-            //PNR_CORE_TRACE("[Wheel scrolled] deltaY = {0}", yOffset);
-        });
+    p_window->setEventCallback(PNR_BIND_EVENT_FCN(Application::onEvent));
 }
 
 Application::~Application()
@@ -99,6 +66,21 @@ int Application::exec()
     return 0;
 }
 
+void Application::onEvent(Event &e)
+{
+    EventDispatcher dispatcher(e);
+    dispatcher.dispatch<WindowCloseEvent>(PNR_BIND_EVENT_FCN(Application::onWindowClose));
+
+    PNR_CORE_TRACE("{0}", e.toString());
+
+    for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
+    {
+        (*--it)->onEvent(e);
+        if (e.isHandled())
+            break;
+    }
+}
+
 void Application::pushLayer(Layer *layer)
 {
     m_layerStack.pushLayer(layer);
@@ -109,6 +91,12 @@ void Application::pushOverlay(Layer *overlay)
 {
     m_layerStack.pushOverlay(overlay);
     overlay->onAttach();
+}
+
+bool Application::onWindowClose(WindowCloseEvent &e)
+{
+    m_windowShouldClose = true;
+    return true;
 }
 
 }

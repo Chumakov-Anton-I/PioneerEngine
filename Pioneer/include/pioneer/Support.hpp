@@ -43,4 +43,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #   define PNR_CORE_ASSERT(x, ...)
 #endif // PIONEER_ENABLE_ASSERTS
 
+template<typename T>
+constexpr auto BIT(T x) { return (1 << x); }
+
+#define PNR_BIND_EVENT_FCN(fcn) std::bind(&fcn, this, std::placeholders::_1)
+
 #endif // !PIONEER_SUPPORT_HPP

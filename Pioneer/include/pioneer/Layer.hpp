@@ -26,6 +26,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+class Event;
+
 class PIONEER_API Layer
 {
 public:
@@ -35,7 +37,7 @@ public:
     virtual void onAttach() {}
     virtual void onDetach() {}
     virtual void onUpdate() {}
-    // TODO: events processing
+    virtual void onEvent(Event &event) {}
 
     inline const std::string name() const { return m_debugName; }
 

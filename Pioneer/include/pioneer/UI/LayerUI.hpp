@@ -25,6 +25,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+class MouseButtonPressedEvent;
+class MouseButtonReleasedEvent;
+class MouseMovedEvent;
+class WheelScrolledEvent;
+class KeyPressedEvent;
+class KeyReleasedEvent;
+class KeyTypedEvent;
+class WindowResizeEvent;
+
 class PIONEER_API LayerUI final : public Layer
 {
 public:
@@ -34,7 +43,17 @@ public:
     void onAttach() override;
     void onDetach() override;
     void onUpdate() override;
-    // TODO: event processing
+    void onEvent(Event &event) override;
+
+private:
+    bool onMouseButtonPressed(MouseButtonPressedEvent &event);
+    bool onMouseButtonReleased(MouseButtonReleasedEvent &event);
+    bool onMouseMoved(MouseMovedEvent &event);
+    bool onWheelScrolled(WheelScrolledEvent &event);
+    bool onKeyPressed(KeyPressedEvent &event);
+    bool onKeyReleased(KeyReleasedEvent &event);
+    bool onKeyTyped(KeyTypedEvent &event);
+    bool onWindowResized(WindowResizeEvent &event);
 
 private:
     float m_time;

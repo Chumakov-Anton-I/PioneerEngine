@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 struct GLFWwindow;
 
 #include <pioneer/Support.hpp>
-#include <sigslot/signal.hpp>
 #include <string>
 
 namespace Pioneer
@@ -40,10 +39,12 @@ struct WindowProps
     }
 };
 
+class PIONEER_API Event;
+
 class PIONEER_API Window
 {
 public:
-    static Window *create(const WindowProps &props = WindowProps());
+    using EventCallbackFcn = std::function<void(Event &)>;
 
     Window(const WindowProps &props);
     ~Window();
@@ -53,28 +54,21 @@ public:
     unsigned int width() const { return m_data.width; }
     unsigned int height() const { return m_data.height; }
 
+    void setEventCallback(const EventCallbackFcn &callback);
     void setVSync(bool enable = true);
     bool isVSync() const;
 
-//signals:  // technically these are just public variables
-    sigslot::signal<GLFWwindow *> signalCloseWindow;
-    sigslot::signal<GLFWwindow *, int, int> signalResizeWindow;
-    sigslot::signal<GLFWwindow *, int, int> signalKeyPress;
-    sigslot::signal<GLFWwindow *, int, int> signalKeyRelease;
-    sigslot::signal<GLFWwindow *, int, int> signalKeyRepeat;
-    sigslot::signal<GLFWwindow *, double, double> signalMouseMove;
-    sigslot::signal<GLFWwindow *, int, int> signalMouseButtonPress;
-    sigslot::signal<GLFWwindow *, int, int> signalMouseButtonRelease;
-    sigslot::signal<GLFWwindow *, double, double> signalWheelScroll;
+    static Window *create(const WindowProps &props = WindowProps());
 
 private:
-    // TODO: probably this structure is not necessary
     struct WindowData
     {
         unsigned int width;
         unsigned int height;
         std::string title;
         bool vsync;
+
+        EventCallbackFcn eventCallback;
     };
 
     int init();
