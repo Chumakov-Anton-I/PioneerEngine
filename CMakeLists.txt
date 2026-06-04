@@ -2,6 +2,8 @@
 
 project(PioneerEngine)
 
+include(cmake/preset.cmake)
+
 option(PIONEER_BUILD_EDITOR "Build the editor" ON)
 
 add_subdirectory(Pioneer)
