@@ -20,8 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef PIONEER_LOGGER_HPP
 #define PIONEER_LOGGER_HPP
 
-#include <spdlog/spdlog.h>
 #include <pioneer/Support.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 namespace Pioneer
 {

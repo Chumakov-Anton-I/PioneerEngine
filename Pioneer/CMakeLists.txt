@@ -43,6 +43,8 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Events/ApplicationEvent.hpp
     include/pioneer/Events/KeyEvent.hpp
     include/pioneer/Input.hpp
+    include/pioneer/KeyCodes.hpp
+    include/pioneer/MouseButtonCodes.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES

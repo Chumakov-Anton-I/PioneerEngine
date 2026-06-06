@@ -21,6 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Logger.hpp>
 #include <pioneer/Layer.hpp>
 #include <pioneer/UI/LayerUI.hpp>
+#include <pioneer/KeyCodes.hpp>
+#include <pioneer/MouseButtonCodes.hpp>
+#include <pioneer/Input.hpp>
+#include <pioneer/Events/Event.hpp>
 
 class EditorLayer final : public Pioneer::Layer
 {
@@ -31,6 +35,13 @@ public:
     void onUpdate() override
     {
         //PNR_INFO("EditorLayer::Update");
+        if (Pioneer::Input::isKeyPressed(PNR_KEY_TAB))
+            PNR_INFO("Tab key pressed!");
+    }
+
+    void onEvent(Pioneer::Event &e) override
+    {
+        //PNR_TRACE("{0}", e.toString());
     }
 };
 

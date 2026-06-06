@@ -58,9 +58,6 @@ int Application::exec()
         for (Layer *layer : m_layerStack)
             layer->onUpdate();
 
-        auto [x, y] = Input::mousePos();
-        PNR_CORE_TRACE("{0}, {1}", x, y);
-
         p_window->onUpdate();
     }
 
