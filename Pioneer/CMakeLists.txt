@@ -42,6 +42,7 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Events/Event.hpp
     include/pioneer/Events/ApplicationEvent.hpp
     include/pioneer/Events/KeyEvent.hpp
+    include/pioneer/Input.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
@@ -51,6 +52,7 @@ set(PIONEER_PRIVATE_SOURCES
     src/Layer.cpp
     src/LayerStack.cpp
     src/UI/LayerUI.cpp
+    src/Input.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
@@ -58,7 +60,7 @@ add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PRIVATE_SOURCES}
     ${IMGUI_SOURCES}
 )
-target_precompile_headers(${PROJECT_NAME} PRIVATE src/pnrpch.hpp)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "src/pnrpch.hpp")
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
         C_VISIBILITY_PRESET hidden

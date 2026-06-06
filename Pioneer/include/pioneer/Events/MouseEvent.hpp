@@ -20,8 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef PIONEER_MOUSE_EVENT_HPP
 #define PIONEER_MOUSE_EVENT_HPP
 
-#include <pnrpch.hpp>
-
 #include "Event.hpp"
 
 namespace Pioneer

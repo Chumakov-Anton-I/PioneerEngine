@@ -22,9 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <pioneer/Support.hpp>
 
-#include <string>
-#include <functional>
-
 namespace Pioneer
 {
 
@@ -87,7 +84,7 @@ public:
     {
         if (m_event.eventType() == T::staticType())
         {
-            m_event.m_handled = func(*(T *)&m_event); // TODO: C-style cast!
+            m_event.m_handled = func(*static_cast<T *>(&m_event));
             return true;
         }
         return false;

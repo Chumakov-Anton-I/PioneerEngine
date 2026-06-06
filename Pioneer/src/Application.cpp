@@ -17,14 +17,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pnrpch.hpp>
-
 #include <pioneer/Application.hpp>
 #include <pioneer/Layer.hpp>
 #include <pioneer/Window.hpp>
 #include <pioneer/Events/ApplicationEvent.hpp>
 #include <pioneer/Events/KeyEvent.hpp>
 #include <pioneer/Events/MouseEvent.hpp>
+#include <pioneer/Input.hpp>
 
 #include <glad/glad.h>  // TODO: move out rendering system from Application class
 
@@ -58,6 +57,9 @@ int Application::exec()
 
         for (Layer *layer : m_layerStack)
             layer->onUpdate();
+
+        auto [x, y] = Input::mousePos();
+        PNR_CORE_TRACE("{0}, {1}", x, y);
 
         p_window->onUpdate();
     }

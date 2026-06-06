@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 struct GLFWwindow;
 
 #include <pioneer/Support.hpp>
-#include <string>
 
 namespace Pioneer
 {
@@ -57,6 +56,8 @@ public:
     void setEventCallback(const EventCallbackFcn &callback);
     void setVSync(bool enable = true);
     bool isVSync() const;
+
+    inline GLFWwindow *natveWindow() const { return m_windowID; }
 
     static Window *create(const WindowProps &props = WindowProps());
 

@@ -17,33 +17,40 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#ifndef PIONEER_LAYER_HPP
-#define PIONEER_LAYER_HPP
+#ifndef PIONEER_INPUT_HPP
+#define PIONEER_INPUT_HPP
 
 #include <pioneer/Support.hpp>
 
 namespace Pioneer
 {
 
-class Event;
-
-class PIONEER_API Layer
+/**
+* @brief The Input class
+* 
+* Global input control object
+*/
+class PIONEER_API Input
 {
 public:
-    Layer(const std::string &name = "Layer");
-    virtual ~Layer();
+    inline static bool isKeyPressed(int keycode) { return s_instance->isKeyPressedImpl(keycode); }
+    inline static bool isMouseButtonPressed(int button) { return s_instance->isMouseButtonPressedImpl(button); }
+    inline static std::pair<float, float> mousePos() { return s_instance->mousePosImpl(); }
+    inline static float mousePosX() { return s_instance->mousePosXImpl(); }
+    inline static float mousePosY() { return s_instance->mousePosYImpl(); }
 
-    virtual void onAttach() {}
-    virtual void onDetach() {}
-    virtual void onUpdate() {}
-    virtual void onEvent(Event &event) {}
-
-    inline const std::string name() const { return m_debugName; }
+protected:
+    virtual bool isKeyPressedImpl(int keycode);
+    virtual bool isMouseButtonPressedImpl(int button);
+    virtual std::pair<float, float> mousePosImpl();
+    virtual float mousePosXImpl();
+    virtual float mousePosYImpl();
 
 private:
-    std::string m_debugName;
+    static Input *s_instance;
 };
 
 }
 
-#endif // !PIONEER_LAYER_HPP
+#endif // !PIONEER_INPUT_HPP
+

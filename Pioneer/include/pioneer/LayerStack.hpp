@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PIONEER_LAYER_STACK_HPP
 
 #include <pioneer/Support.hpp>
-
 #include <vector>
 
 namespace Pioneer

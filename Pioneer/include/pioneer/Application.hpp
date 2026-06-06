@@ -22,7 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <pioneer/Support.hpp>
 #include <pioneer/LayerStack.hpp>
-
 #include <memory>
 
 namespace Pioneer

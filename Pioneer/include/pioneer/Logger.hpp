@@ -23,8 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <spdlog/spdlog.h>
 #include <pioneer/Support.hpp>
 
-#include <memory>
-
 namespace Pioneer
 {
 

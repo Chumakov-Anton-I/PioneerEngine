@@ -17,48 +17,49 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pioneer/LayerStack.hpp>
-#include <pioneer/Layer.hpp>
+#include <pioneer/Input.hpp>
+#include <pioneer/Application.hpp>
+#include <pioneer/Window.hpp>
+
+#include <GLFW/glfw3.h>
 
 namespace Pioneer
 {
 
-LayerStack::LayerStack()
+Input *Input::s_instance = new Input{};
+
+bool Input::isKeyPressedImpl(int keycode)
 {
-    m_layerInsert = m_layers.begin();
+    auto *window = Application::instance().window().natveWindow();
+    auto state = glfwGetKey(window, keycode);
+    return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-LayerStack::~LayerStack()
+bool Input::isMouseButtonPressedImpl(int button)
 {
-    for (Layer *layer : m_layers)
-        delete layer;
+    auto *window = Application::instance().window().natveWindow();
+    auto state = glfwGetMouseButton(window, button);
+    return state == GLFW_PRESS;
 }
 
-void LayerStack::pushLayer(Layer *layer)
+std::pair<float, float> Input::mousePosImpl()
 {
-    m_layerInsert = m_layers.emplace(m_layerInsert, layer);
+    auto *window = Application::instance().window().natveWindow();
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    return { static_cast<float>(x), static_cast<float>(y) };
 }
 
-void LayerStack::pushOverlay(Layer *overlay)
+float Input::mousePosXImpl()
 {
-    m_layers.emplace_back(overlay);
+    auto [x, y] = mousePosImpl();
+    return x;
 }
 
-void LayerStack::popLayer(Layer *layer)
+float Input::mousePosYImpl()
 {
-    auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-    if (it != m_layers.end())
-    {
-        m_layers.erase(it);
-        m_layerInsert--;
-    }
-}
-
-void LayerStack::popOverlay(Layer *overlay)
-{
-    auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-    if (it != m_layers.end())
-        m_layers.erase(it);
+    auto [x, y] = mousePosImpl();
+    return y;
 }
 
 }
