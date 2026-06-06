@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
-class PIONEER_API WindowCloseEvent : public Event
+class PIONEER_API WindowCloseEvent final : public Event
 {
 public:
     WindowCloseEvent() {}
@@ -34,7 +34,7 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 };
 
-class PIONEER_API WindowResizeEvent : public Event
+class PIONEER_API WindowResizeEvent final : public Event
 {
 public:
     WindowResizeEvent(unsigned int width, unsigned int height)
@@ -58,7 +58,7 @@ private:
     unsigned int m_height;
 };
 
-class PIONEER_API AppTickEvent : public Event
+class PIONEER_API AppTickEvent final : public Event
 {
 public:
     AppTickEvent() {}
@@ -67,7 +67,7 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 };
 
-class PIONEER_API AppUpdateEvent : public Event
+class PIONEER_API AppUpdateEvent final : public Event
 {
 public:
     AppUpdateEvent() {}
@@ -76,7 +76,7 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 };
 
-class PIONEER_API AppRenderEvent : public Event
+class PIONEER_API AppRenderEvent final : public Event
 {
 public:
     AppRenderEvent() {}

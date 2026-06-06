@@ -20,12 +20,14 @@ It also uses STL as logn as it's possible.
 | [GLFW](https://github.com/glfw/glfw) | Multi-platform library for OpenGL and Vulkan development on the desktop. | zlib |
 | [sigslot](https://github.com/palacaze/sigslot) | Header-only, thread safe implementation of signal-slots for C++ | MIT |
 | [Dear ImGui](https://github.com/ocornut/imgui) | Bloat-free graphical user interface library | MIT |
+| [GLM](https://github.com/g-truc/glm) | Header only C++ mathematics library for graphics software | MIT |
 
 The all third-party libraries are included as submodules.
 
 ## Building
 
 Requirements:
+* git
 * CMake version 3.20 and newer
 * C++ compiler supporting C++17 standard
 

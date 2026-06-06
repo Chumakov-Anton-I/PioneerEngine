@@ -16,6 +16,10 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw ${CMAKE_CURRENT_BINARY_DIR}/g
 # glad
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
 
+# GLM
+set(GLM_ENABLE_CXX_17 ON CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
+
 # ImGui
 # ImGui's developer doesn't recommend build ImGui as a static or shared library
 # see more: https://github.com/ocornut/imgui/wiki/Getting-Started
@@ -62,7 +66,7 @@ add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PRIVATE_SOURCES}
     ${IMGUI_SOURCES}
 )
-target_precompile_headers(${PROJECT_NAME} PRIVATE "src/pnrpch.hpp")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/pnrpch.hpp")
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
         C_VISIBILITY_PRESET hidden
@@ -94,5 +98,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     spdlog
     glfw
     glad
+    glm
     opengl32
 )

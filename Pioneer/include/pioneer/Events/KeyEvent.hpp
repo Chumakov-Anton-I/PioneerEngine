@@ -38,7 +38,7 @@ protected:
     int m_keycode;
 };
 
-class PIONEER_API KeyPressedEvent : public KeyEvent
+class PIONEER_API KeyPressedEvent final : public KeyEvent
 {
 public:
     KeyPressedEvent(int keycode, int repeatCount)
@@ -59,7 +59,7 @@ private:
     int m_repeatCount;
 };
 
-class PIONEER_API KeyReleasedEvent : public KeyEvent
+class PIONEER_API KeyReleasedEvent final : public KeyEvent
 {
 public:
     KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
@@ -74,7 +74,7 @@ public:
     EVENT_CLASS_TYPE(KeyReleased)
 };
 
-class PIONEER_API KeyTypedEvent : public KeyEvent
+class PIONEER_API KeyTypedEvent final : public KeyEvent
 {
 public:
     KeyTypedEvent(int keycode) : KeyEvent(keycode) {}

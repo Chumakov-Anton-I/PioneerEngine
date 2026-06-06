@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
-class PIONEER_API MouseMovedEvent : public Event
+class PIONEER_API MouseMovedEvent final : public Event
 {
 public:
     MouseMovedEvent(float x, float y)
@@ -62,7 +62,7 @@ protected:
     int m_button;
 };
 
-class PIONEER_API MouseButtonPressedEvent : public MouseButtonEvent
+class PIONEER_API MouseButtonPressedEvent final : public MouseButtonEvent
 {
 public:
     MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
@@ -77,7 +77,7 @@ public:
     EVENT_CLASS_TYPE(MouseButtonPressed)
 };
 
-class PIONEER_API MouseButtonReleasedEvent : public MouseButtonEvent
+class PIONEER_API MouseButtonReleasedEvent final : public MouseButtonEvent
 {
 public:
     MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
@@ -92,7 +92,7 @@ public:
     EVENT_CLASS_TYPE(MouseButtonReleased)
 };
 
-class PIONEER_API WheelScrolledEvent : public Event
+class PIONEER_API WheelScrolledEvent final : public Event
 {
 public:
     WheelScrolledEvent(float xOffset, float yOffset)
