@@ -53,6 +53,8 @@ public:
     unsigned int width() const { return m_data.width; }
     unsigned int height() const { return m_data.height; }
 
+    int errorCode() const { return m_errorCode; }
+
     void setEventCallback(const EventCallbackFcn &callback);
     void setVSync(bool enable = true);
     bool isVSync() const;
@@ -76,6 +78,7 @@ private:
 
     GLFWwindow *m_windowID;
     WindowData m_data;
+    int m_errorCode;
 
 private:
     Window(const Window &) = delete;

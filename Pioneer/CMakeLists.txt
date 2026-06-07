@@ -112,6 +112,10 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_BINARY_DIR}
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_options(${PROJECT_NAME} PRIVATE  # Source - https://stackoverflow.com/a/50882216
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE
     spdlog
     glfw
@@ -127,7 +131,6 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     OUTPUT_VARIABLE BUILD_HASH OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-message(STATUS "Commit ${BUILD_HASH}")
 set(PIONEER_VERSION_MAJOR "${CMAKE_PROJECT_VERSION_MAJOR}")
 set(PIONEER_VERSION_MINOR "${CMAKE_PROJECT_VERSION_MINOR}")
 set(PIONEER_VERSION_PATCH "${CMAKE_PROJECT_VERSION_PATCH}")

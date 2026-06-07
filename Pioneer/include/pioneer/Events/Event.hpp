@@ -66,7 +66,7 @@ public:
     [[nodiscard]] virtual std::string toString() const { return name(); }
     inline bool isHandled() const { return m_handled; }
 
-    inline bool isInCategory(EventCategory category) const { return categoryFlags(); }
+    inline bool isInCategory(EventCategory category) const { return categoryFlags() & category; }
 
 protected:
     bool m_handled = false;

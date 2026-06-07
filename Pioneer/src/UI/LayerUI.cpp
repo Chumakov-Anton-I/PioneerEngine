@@ -216,7 +216,7 @@ void LayerUI::end()
 {
     auto &io = ImGui::GetIO();
     auto &app = Application::instance();
-    io.DisplaySize = ImVec2(app.window().width(), app.window().height());
+    io.DisplaySize = ImVec2(static_cast<float>(app.window().width()), static_cast<float>(app.window().height()));
 
     // Rendering
     ImGui::Render();

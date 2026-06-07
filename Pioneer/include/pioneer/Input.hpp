@@ -33,6 +33,7 @@ namespace Pioneer
 class PIONEER_API Input
 {
 public:
+    virtual ~Input() = default;
     inline static bool isKeyPressed(int keycode) { return s_instance->isKeyPressedImpl(keycode); }
     inline static bool isMouseButtonPressed(int button) { return s_instance->isMouseButtonPressedImpl(button); }
     inline static std::pair<float, float> mousePos() { return s_instance->mousePosImpl(); }

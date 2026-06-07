@@ -44,7 +44,7 @@ Window::Window(const WindowProps &props)
     m_data.title = props.Title;
     m_data.width = props.Width;
     m_data.height = props.Height;
-    int rv = init();
+    m_errorCode = init();
 }
 
 Window::~Window()
@@ -125,12 +125,14 @@ int Window::init()
     glfwSetFramebufferSizeCallback(m_windowID,
         [](GLFWwindow *pwnd, int width, int height)
         {
+            (void)pwnd;
             glViewport(0, 0, width, height);
         });
 
     glfwSetKeyCallback(m_windowID,
         [](GLFWwindow *pwnd, int key, int scancode, int action, int mods)
         {
+            (void)scancode; (void)mods;
             auto &data = WINDOW_DATA_PTR(pwnd);
 
             switch (action)
@@ -169,6 +171,7 @@ int Window::init()
     glfwSetMouseButtonCallback(m_windowID,
         [](GLFWwindow *pwnd, int button, int action, int mode)
         {
+            (void)mode;
             auto &data = WINDOW_DATA_PTR(pwnd);
             switch (action)
             {

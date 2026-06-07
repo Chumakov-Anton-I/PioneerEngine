@@ -21,21 +21,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PIONEER_SUPPORT_HPP
 
 #ifdef _WIN32
-#   ifdef PIONEER_LIBRARY_BUILD
-#       define PIONEER_API __declspec(dllexport)
-#   else
-#       define PIONEER_API __declspec(dllimport)
-#   endif
-#else // *nix || MacOS
-#   ifdef PIONEER_LIBRARY_BUILD
-#       define PIONEER_API __attribute__((visibility("default")))
+#   ifndef PIONEER_BUILD_STATIC_LIB
+#       ifdef PIONEER_LIBRARY_BUILD
+#           define PIONEER_API __declspec(dllexport)
+#       else
+#           define PIONEER_API __declspec(dllimport)
+#       endif
 #   else
 #       define PIONEER_API
 #   endif
-#endif
-
-#ifdef PIONEER_BUILD_STATIC_LIB
-#   define PIONEER_API
+#else // *nix || MacOS
+#   ifndef PIONEER_BUILD_STATIC_LIB
+#       ifdef PIONEER_LIBRARY_BUILD
+#           define PIONEER_API __attribute__((visibility("default")))
+#       else
+#           define PIONEER_API
+#       endif
+#   else
+#       define PIONEER_API
+#   endif
 #endif
 
 #ifdef PIONEER_ENABLE_ASSERTS

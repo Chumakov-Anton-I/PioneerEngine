@@ -37,7 +37,7 @@ public:
     virtual void onDetach() {}
     virtual void onUpdate() {}
     virtual void onUIRender() {}
-    virtual void onEvent(Event &event) {}
+    virtual void onEvent(Event &event) { (void)event; }
 
     inline const std::string name() const { return m_debugName; }
 

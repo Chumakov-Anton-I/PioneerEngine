@@ -35,6 +35,7 @@ Application *Application::s_instance = nullptr;
 Application::Application(int &argc, char *argv[])
     : m_windowShouldClose{false}
 {
+    (void)argc; (void)argv;
     PNR_CORE_INFO("[Application] Creating");
     PNR_CORE_ASSERT(!s_instance, "Application already exists!")
     s_instance = this;
@@ -96,7 +97,7 @@ void Application::pushOverlay(Layer *overlay)
     m_layerStack.pushOverlay(overlay);
 }
 
-bool Application::onWindowClose(WindowCloseEvent &e)
+bool Application::onWindowClose(WindowCloseEvent &)
 {
     m_windowShouldClose = true;
     return true;
