@@ -21,10 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Application.hpp>
 #include <pioneer/Window.hpp>
 
-#include <pioneer/Events/ApplicationEvent.hpp>
-#include <pioneer/Events/KeyEvent.hpp>
-#include <pioneer/Events/MouseEvent.hpp>
-
 #include <imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
@@ -33,8 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
-// TODO: temporary feature
-static constexpr ImGuiKey KeyToImGuiKey(int keycode)
+/*static constexpr ImGuiKey KeyToImGuiKey(int keycode)
 {
     switch (keycode)
     {
@@ -159,9 +154,9 @@ static constexpr ImGuiKey KeyToImGuiKey(int keycode)
     case GLFW_KEY_F24: return ImGuiKey_F24;
     default: return ImGuiKey_None;
     }
-}
+}*/
 
-LayerUI::LayerUI() : Layer{ "UI layer" }, m_time{ 0.0f }
+LayerUI::LayerUI() : Layer("UI layer"), m_time{ 0.0f }
 {
 }
 
@@ -174,7 +169,7 @@ void LayerUI::onAttach()
     IMGUI_CHECKVERSION();
     [[maybe_unused]] auto *ctx = ImGui::CreateContext();
     PNR_CORE_ASSERT(ctx, "Failed to create context");
-    ImGui::StyleColorsLight();  // optional
+    ImGui::StyleColorsLight();
 
     auto &io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -183,123 +178,57 @@ void LayerUI::onAttach()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    [[maybe_unused]] auto initialized = ImGui_ImplOpenGL3_Init("#version 410 core");
+    auto &style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    auto *window = Application::instance().window().nativeWindow();
+    auto initialized = ImGui_ImplGlfw_InitForOpenGL(window, true);
+    PNR_CORE_ASSERT(initialized, "Failed to initialize GLFW for ImGui");
+    initialized = ImGui_ImplOpenGL3_Init("#version 410 core");
     PNR_CORE_ASSERT(initialized, "Failed to init OpenGL for ImGui")
 }
 
 void LayerUI::onDetach()
 {
     ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void LayerUI::onUpdate()
+void LayerUI::onUIRender()
+{
+    static bool show = true;
+    ImGui::ShowDemoWindow(&show);
+}
+
+void LayerUI::begin()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void LayerUI::end()
 {
     auto &io = ImGui::GetIO();
     auto &app = Application::instance();
     io.DisplaySize = ImVec2(app.window().width(), app.window().height());
 
-    float time = static_cast<float>(glfwGetTime());
-    io.DeltaTime = (m_time > 0.0f) ? (time - m_time) : (1.0f / 60.0f);
-    m_time = time;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
-
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-
+    // Rendering
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
 
-void LayerUI::onEvent(Event &event)
-{
-    EventDispatcher dispatcher(event);
-    dispatcher.dispatch<MouseButtonPressedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onMouseButtonPressed));
-    dispatcher.dispatch<MouseButtonReleasedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onMouseButtonReleased));
-    dispatcher.dispatch<MouseMovedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onMouseMoved));
-    dispatcher.dispatch<WheelScrolledEvent>(PNR_BIND_EVENT_FCN(LayerUI::onWheelScrolled));
-    dispatcher.dispatch<KeyPressedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onKeyPressed));
-    dispatcher.dispatch<KeyReleasedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onKeyReleased));
-    dispatcher.dispatch<KeyTypedEvent>(PNR_BIND_EVENT_FCN(LayerUI::onKeyTyped));
-    dispatcher.dispatch<WindowResizeEvent>(PNR_BIND_EVENT_FCN(LayerUI::onWindowResized));
-}
-
-bool LayerUI::onMouseButtonPressed(MouseButtonPressedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    io.MouseDown[event.mouseButton()] = true;
-
-    return false;
-}
-
-bool LayerUI::onMouseButtonReleased(MouseButtonReleasedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    io.MouseDown[event.mouseButton()] = false;
-
-    return false;
-}
-
-bool LayerUI::onMouseMoved(MouseMovedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    io.MousePos = ImVec2(event.x(), event.y());
-
-    return false;
-}
-
-bool LayerUI::onWheelScrolled(WheelScrolledEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    io.MouseWheelH = event.xOffset();
-    io.MouseWheel  = event.yOffset();
-
-    return false;
-}
-
-bool LayerUI::onKeyPressed(KeyPressedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    auto keycode = KeyToImGuiKey(event.keyCode());
-    io.AddKeyEvent(keycode, true);
-
-    io.KeyCtrl = ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) || ImGui::IsKeyPressed(ImGuiKey_RightCtrl);
-    io.KeyShift = ImGui::IsKeyPressed(ImGuiKey_LeftShift) || ImGui::IsKeyPressed(ImGuiKey_RightShift);
-    io.KeyAlt = ImGui::IsKeyPressed(ImGuiKey_LeftAlt) || ImGui::IsKeyPressed(ImGuiKey_RightAlt);
-    io.KeySuper = ImGui::IsKeyPressed(ImGuiKey_LeftSuper) || ImGui::IsKeyPressed(ImGuiKey_RightSuper);
-
-    return false;
-}
-
-bool LayerUI::onKeyReleased(KeyReleasedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    auto keycode = KeyToImGuiKey(event.keyCode());
-    io.AddKeyEvent(keycode, false);
-
-    return false;
-}
-
-bool LayerUI::onKeyTyped(KeyTypedEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    int keycode = event.keyCode();
-    if (keycode > 0 && keycode < 0x10000)
-        io.AddInputCharacter(static_cast<unsigned short>(keycode));
-
-    return false;
-}
-
-bool LayerUI::onWindowResized(WindowResizeEvent &event)
-{
-    auto &io = ImGui::GetIO();
-    io.DisplaySize = ImVec2(event.width(), event.height());
-    io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-    glViewport(0, 0, event.width(), event.height());
-
-    return false;
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        auto *backup_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_context);
+    }
 }
 
 }

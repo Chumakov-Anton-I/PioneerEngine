@@ -42,18 +42,10 @@ public:
 
     void onAttach() override;
     void onDetach() override;
-    void onUpdate() override;
-    void onEvent(Event &event) override;
+    void onUIRender() override;
 
-private:
-    bool onMouseButtonPressed(MouseButtonPressedEvent &event);
-    bool onMouseButtonReleased(MouseButtonReleasedEvent &event);
-    bool onMouseMoved(MouseMovedEvent &event);
-    bool onWheelScrolled(WheelScrolledEvent &event);
-    bool onKeyPressed(KeyPressedEvent &event);
-    bool onKeyReleased(KeyReleasedEvent &event);
-    bool onKeyTyped(KeyTypedEvent &event);
-    bool onWindowResized(WindowResizeEvent &event);
+    void begin();
+    void end();
 
 private:
     float m_time;

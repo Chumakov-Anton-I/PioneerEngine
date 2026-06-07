@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/KeyCodes.hpp>
 #include <pioneer/MouseButtonCodes.hpp>
 #include <pioneer/Input.hpp>
-#include <pioneer/Events/Event.hpp>
+#include <pioneer/Events/KeyEvent.hpp>
 
 class EditorLayer final : public Pioneer::Layer
 {
@@ -36,22 +36,28 @@ public:
     {
         //PNR_INFO("EditorLayer::Update");
         if (Pioneer::Input::isKeyPressed(PNR_KEY_TAB))
-            PNR_INFO("Tab key pressed!");
+            PNR_INFO("Tab key pressed (poll)!");
     }
 
-    void onEvent(Pioneer::Event &e) override
+    void onEvent(Pioneer::Event &event) override
     {
-        //PNR_TRACE("{0}", e.toString());
+        if (event.eventType() == Pioneer::EventType::KeyPressed)
+        {
+            Pioneer::KeyPressedEvent &e = static_cast<Pioneer::KeyPressedEvent &>(event);
+            if (e.keyCode() == PNR_KEY_TAB)
+                PNR_TRACE("Tab key pressed (event)!");
+            PNR_TRACE("{0}", e.keyCode());
+        }
     }
 };
 
 class EditorApp final : public Pioneer::Application
 {
 public:
-    EditorApp() : Application()
+    EditorApp(int &argc, char *argv[]) : Application(argc, argv)
     {
         pushLayer(new EditorLayer());
-        pushOverlay(new Pioneer::LayerUI());
+        //pushOverlay(new Pioneer::LayerUI());
     }
     ~EditorApp() override {}
 };
@@ -60,7 +66,7 @@ int main(int argc, char *argv[])
 {
     Pioneer::Logger::init();
     PNR_CORE_WARN("Initialized LOG!");
-    EditorApp app;
+    EditorApp app(argc, argv);
     app.exec();
     return 0;
 }

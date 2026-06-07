@@ -57,7 +57,7 @@ public:
     void setVSync(bool enable = true);
     bool isVSync() const;
 
-    inline GLFWwindow *natveWindow() const { return m_windowID; }
+    inline GLFWwindow *nativeWindow() const { return m_windowID; }
 
     static Window *create(const WindowProps &props = WindowProps());
 

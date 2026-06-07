@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 ***************************************************************************** */
 
 #include <pioneer/Application.hpp>
-#include <pioneer/Layer.hpp>
+#include <pioneer/UI/LayerUI.hpp>
 #include <pioneer/Window.hpp>
 #include <pioneer/Events/ApplicationEvent.hpp>
 #include <pioneer/Events/KeyEvent.hpp>
@@ -32,7 +32,7 @@ namespace Pioneer
 
 Application *Application::s_instance = nullptr;
 
-Application::Application()
+Application::Application(int &argc, char *argv[])
     : m_windowShouldClose{false}
 {
     PNR_CORE_INFO("[Application] Creating");
@@ -41,6 +41,9 @@ Application::Application()
 
     p_window = std::unique_ptr<Window>(Window::create());
     p_window->setEventCallback(PNR_BIND_EVENT_FCN(Application::onEvent));
+
+    m_layerUI = new LayerUI;
+    pushOverlay(m_layerUI);
 }
 
 Application::~Application()
@@ -58,6 +61,11 @@ int Application::exec()
         for (Layer *layer : m_layerStack)
             layer->onUpdate();
 
+        m_layerUI->begin();
+        for (auto *layer : m_layerStack)
+            layer->onUIRender();
+        m_layerUI->end();
+
         p_window->onUpdate();
     }
 
@@ -70,8 +78,6 @@ void Application::onEvent(Event &e)
     EventDispatcher dispatcher(e);
     dispatcher.dispatch<WindowCloseEvent>(PNR_BIND_EVENT_FCN(Application::onWindowClose));
 
-    PNR_CORE_TRACE("{0}", e.toString());
-
     for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
     {
         (*--it)->onEvent(e);
@@ -83,13 +89,11 @@ void Application::onEvent(Event &e)
 void Application::pushLayer(Layer *layer)
 {
     m_layerStack.pushLayer(layer);
-    layer->onAttach();
 }
 
 void Application::pushOverlay(Layer *overlay)
 {
     m_layerStack.pushOverlay(overlay);
-    overlay->onAttach();
 }
 
 bool Application::onWindowClose(WindowCloseEvent &e)

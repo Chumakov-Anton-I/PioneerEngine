@@ -30,13 +30,14 @@ namespace Pioneer
 class Window;
 class Event;
 class WindowCloseEvent;
+class LayerUI;
 
 /// The Application class, an engine application object.
 /// It is a singleton
 class PIONEER_API Application
 {
 public:
-    Application();
+    Application(int &argc, char *argv[]);
     virtual ~Application();
 
     virtual int exec();
@@ -56,6 +57,7 @@ private:
     std::unique_ptr<Window> p_window;
     bool m_windowShouldClose;
     LayerStack m_layerStack;
+    LayerUI *m_layerUI;
 
     static Application *s_instance;
 

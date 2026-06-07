@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PIONEER_KEY_EVENT_HPP
 
 #include "Event.hpp"
+#include <sstream>
 
 namespace Pioneer
 {

@@ -44,7 +44,8 @@ public:
 
 private:
     std::vector<Layer *> m_layers;
-    std::vector<Layer *>::iterator m_layerInsert;
+    //std::vector<Layer *>::iterator m_layerInsert;
+    size_t m_layerInserIndex;
 };
 
 }

@@ -30,21 +30,21 @@ Input *Input::s_instance = new Input{};
 
 bool Input::isKeyPressedImpl(int keycode)
 {
-    auto *window = Application::instance().window().natveWindow();
+    auto *window = Application::instance().window().nativeWindow();
     auto state = glfwGetKey(window, keycode);
     return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
 bool Input::isMouseButtonPressedImpl(int button)
 {
-    auto *window = Application::instance().window().natveWindow();
+    auto *window = Application::instance().window().nativeWindow();
     auto state = glfwGetMouseButton(window, button);
     return state == GLFW_PRESS;
 }
 
 std::pair<float, float> Input::mousePosImpl()
 {
-    auto *window = Application::instance().window().natveWindow();
+    auto *window = Application::instance().window().nativeWindow();
     double x, y;
     glfwGetCursorPos(window, &x, &y);
     return { static_cast<float>(x), static_cast<float>(y) };
