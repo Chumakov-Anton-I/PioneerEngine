@@ -21,8 +21,11 @@ set(GLM_ENABLE_CXX_17 ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
 
 # ImGui
-# ImGui's developer doesn't recommend build ImGui as a static or shared library
-# see more: https://github.com/ocornut/imgui/wiki/Getting-Started
+set(IMGUI_INCLUDES
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui.h
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.h
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.h
+)
 set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui.cpp
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui_demo.cpp
@@ -32,6 +35,15 @@ set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp
     ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.cpp
     ${CMAKE_SOURCE_DIR}/external/imgui/misc/cpp/imgui_stdlib.cpp
+)
+add_library(ImGui STATIC
+    ${IMGUI_INCLUDES}
+    ${IMGUI_SOURCES}
+)
+target_link_libraries(ImGui PRIVATE glfw)
+target_include_directories(ImGui
+    PUBLIC  ${CMAKE_SOURCE_DIR}/external/
+    PUBLIC  ${CMAKE_SOURCE_DIR}/external/imgui/
 )
 
 # ================= Engine building ===================
@@ -64,7 +76,6 @@ add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
 #    ${PIONEER_PRIVATE_INCLUDES}
     ${PIONEER_PRIVATE_SOURCES}
-    ${IMGUI_SOURCES}
 )
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/pnrpch.hpp")
 set_target_properties(${PROJECT_NAME}
@@ -88,10 +99,6 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}/external/
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}/external/imgui/
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -99,5 +106,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     glfw
     glad
     glm
+    ImGui
     opengl32
 )
