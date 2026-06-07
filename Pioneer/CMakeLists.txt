@@ -71,6 +71,7 @@ set(PIONEER_PRIVATE_SOURCES
     src/LayerStack.cpp
     src/UI/LayerUI.cpp
     src/Input.cpp
+    src/Support.cpp
 )
 add_library(${PROJECT_NAME} SHARED
     ${PIONEER_PUBLIC_INCLUDES}
@@ -99,6 +100,8 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -109,3 +112,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ImGui
     opengl32
 )
+
+# configure version
+execute_process(
+    COMMAND git log -1 --pretty=format:%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE BUILD_HASH OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+message(STATUS "Commit ${BUILD_HASH}")
+set(PIONEER_VERSION_MAJOR "${CMAKE_PROJECT_VERSION_MAJOR}")
+set(PIONEER_VERSION_MINOR "${CMAKE_PROJECT_VERSION_MINOR}")
+set(PIONEER_VERSION_PATCH "${CMAKE_PROJECT_VERSION_PATCH}")
+set(PIONEER_VERSION_BUILD "${BUILD_HASH}")
+set(PIONEER_VERSION_STR "${CMAKE_PROJECT_VERSION}")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_BINARY_DIR}/version.h @ONLY)

@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 {
     Pioneer::Logger::init();
     PNR_CORE_WARN("Initialized LOG!");
+    PNR_INFO("Pioneer engine version {0}", Pioneer::engineVersion());
     EditorApp app(argc, argv);
     app.exec();
     return 0;

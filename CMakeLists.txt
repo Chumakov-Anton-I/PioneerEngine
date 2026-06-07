@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.20)
 
-project(PioneerEngine)
+project(PioneerEngine VERSION 0.1.0)
 
 include(cmake/preset.cmake)
 
