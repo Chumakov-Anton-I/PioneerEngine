@@ -5,6 +5,7 @@ project(PioneerEngine VERSION 0.1.0)
 include(cmake/preset.cmake)
 
 option(PIONEER_BUILD_EDITOR "Build the editor" ON)
+set(PIONEER_BUILD_SHARED_LIB OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(Pioneer)
 if (${PIONEER_BUILD_EDITOR})

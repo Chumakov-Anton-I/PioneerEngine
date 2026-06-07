@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 
 project(Pioneer)
 
+option(PIONEER_BUILD_SHARED_LIB "Build Pioneer as a shared library" ON)
+
 # ============== Dependencies building ================
 # spdlog
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog ${CMAKE_CURRENT_BINARY_DIR}/spdlog)
@@ -73,11 +75,17 @@ set(PIONEER_PRIVATE_SOURCES
     src/Input.cpp
     src/Support.cpp
 )
-add_library(${PROJECT_NAME} SHARED
+set(PIONEER_SOURCES
     ${PIONEER_PUBLIC_INCLUDES}
 #    ${PIONEER_PRIVATE_INCLUDES}
     ${PIONEER_PRIVATE_SOURCES}
 )
+if (PIONEER_BUILD_SHARED_LIB)
+    add_library(${PROJECT_NAME} SHARED ${PIONEER_SOURCES})
+else()
+    add_library(${PROJECT_NAME} STATIC ${PIONEER_SOURCES})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC PIONEER_BUILD_STATIC_LIB)
+endif()
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/pnrpch.hpp")
 set_target_properties(${PROJECT_NAME}
     PROPERTIES

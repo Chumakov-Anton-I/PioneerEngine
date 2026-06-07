@@ -26,12 +26,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #   else
 #       define PIONEER_API __declspec(dllimport)
 #   endif
-#else
+#else // *nix || MacOS
 #   ifdef PIONEER_LIBRARY_BUILD
 #       define PIONEER_API __attribute__((visibility("default")))
 #   else
 #       define PIONEER_API
 #   endif
+#endif
+
+#ifdef PIONEER_BUILD_STATIC_LIB
+#   define PIONEER_API
 #endif
 
 #ifdef PIONEER_ENABLE_ASSERTS
