@@ -21,8 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Events/ApplicationEvent.hpp>
 #include <pioneer/Events/MouseEvent.hpp>
 #include <pioneer/Events/KeyEvent.hpp>
+#include <pioneer/Renderer/OpenGLContext.hpp>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Pioneer
@@ -49,14 +49,15 @@ Window::Window(const WindowProps &props)
 
 Window::~Window()
 {
+    delete m_context;
     glfwDestroyWindow(m_windowID);
     glfwTerminate();
 }
 
 void Window::onUpdate()
 {
-    glfwSwapBuffers(m_windowID);
     glfwPollEvents();
+    m_context->swapBuffers();
 }
 
 void Window::setEventCallback(const EventCallbackFcn &callback)
@@ -83,29 +84,18 @@ int Window::init()
 {
     glfwSetErrorCallback([](int error_code, const char *description)
         {
-            PNR_FATAL("GLFW error {0}: {1}", error_code, description);
+            PNR_CORE_FATAL("GLFW error {0}: {1}", error_code, description);
         });
 
-    if (!glfwInit())
-    {
-        PNR_CORE_ASSERT(false, "Failed to initialize GLFW!");
-        return -1;  // TODO: create error codes (enum)
-    }
+    [[maybe_unused]] int initStatus = glfwInit();
+    PNR_CORE_ASSERT(initStatus, "Failed to initialize GLFW");
 
     m_windowID = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-    if (!m_windowID)
-    {
-        PNR_FATAL("Failed to create GLFW window '{0}' size {1}x{2}", m_data.title, m_data.width, m_data.height);
-        return -2;
-    }
+    PNR_CORE_ASSERT(m_windowID, "Failed to create GLFW window '{0}' size {1}x{2}", m_data.title, m_data.width, m_data.height);
 
-    glfwMakeContextCurrent(m_windowID);
+    m_context = new OpenGLContext(m_windowID);
+    m_context->init();
     setVSync(true);
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-    {
-        PNR_CORE_FATAL("Failed to initialize GLAD");
-        return -3;
-    }
 
     // event processing
     glfwSetWindowUserPointer(m_windowID, &m_data);
@@ -113,7 +103,7 @@ int Window::init()
     glfwSetWindowSizeCallback(m_windowID,
         [](GLFWwindow *pwnd, int width, int height)
         {
-            PNR_INFO("New window size {0}x{1}", width, height);
+            //PNR_INFO("New window size {0}x{1}", width, height);
             WindowResizeEvent event(width, height);
 
             auto &data = WINDOW_DATA_PTR(pwnd);
@@ -211,7 +201,7 @@ int Window::init()
     glfwSetWindowCloseCallback(m_windowID,
         [](GLFWwindow *pwnd)
         {
-            PNR_INFO("Window should close");
+            PNR_CORE_INFO("Window should close");
             auto &data = WINDOW_DATA_PTR(pwnd);
             WindowCloseEvent event;
             data.eventCallback(event);

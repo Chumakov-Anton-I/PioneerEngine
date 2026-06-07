@@ -24,6 +24,8 @@ struct GLFWwindow;
 namespace Pioneer
 {
 
+class GraphicsContext;
+
 struct WindowProps
 {
     unsigned int Width;
@@ -78,6 +80,7 @@ private:
 
     GLFWwindow *m_windowID;
     WindowData m_data;
+    GraphicsContext *m_context;
     int m_errorCode;
 
 private:

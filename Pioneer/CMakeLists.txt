@@ -63,6 +63,8 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Input.hpp
     include/pioneer/KeyCodes.hpp
     include/pioneer/MouseButtonCodes.hpp
+    include/pioneer/Renderer/GraphicsContext.hpp
+    include/pioneer/Renderer/OpenGLContext.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
@@ -74,6 +76,8 @@ set(PIONEER_PRIVATE_SOURCES
     src/UI/LayerUI.cpp
     src/Input.cpp
     src/Support.cpp
+    src/Renderer/GraphicsContext.cpp
+    src/Renderer/OpenGLContext.cpp
 )
 set(PIONEER_SOURCES
     ${PIONEER_PUBLIC_INCLUDES}
