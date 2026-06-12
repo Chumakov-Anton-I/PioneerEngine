@@ -32,6 +32,8 @@ class Event;
 class WindowCloseEvent;
 class LayerUI;
 class Shader;
+class VertexBufferObject;
+class IndexBufferObject;
 
 /// The Application class, an engine application object.
 /// It is a singleton
@@ -62,8 +64,10 @@ private:
 
     static Application *s_instance;
 
-    unsigned int m_VAO, m_VBO, m_EBO;
+    unsigned int m_VAO;
     std::unique_ptr<Shader> m_shader;
+    std::unique_ptr<VertexBufferObject> m_VBO;
+    std::unique_ptr<IndexBufferObject> m_EBO;
 
 private:
     Application(const Application&) = delete;

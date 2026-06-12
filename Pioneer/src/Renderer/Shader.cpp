@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 ***************************************************************************** */
 
 #include <pioneer/Renderer/Shader.hpp>
+#include <pioneer/Renderer/Buffer.hpp>
 #include <glad/glad.h>
 
 namespace Pioneer

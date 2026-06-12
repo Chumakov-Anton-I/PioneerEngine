@@ -66,6 +66,8 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Renderer/GraphicsContext.hpp
     include/pioneer/Renderer/OpenGLContext.hpp
     include/pioneer/Renderer/Shader.hpp
+    include/pioneer/Renderer/Buffer.hpp
+    include/pioneer/Renderer/Renderer.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
@@ -80,6 +82,8 @@ set(PIONEER_PRIVATE_SOURCES
     src/Renderer/GraphicsContext.cpp
     src/Renderer/OpenGLContext.cpp
     src/Renderer/Shader.cpp
+    src/Renderer/Buffer.cpp
+    src/Renderer/Renderer.cpp
 )
 set(PIONEER_SOURCES
     ${PIONEER_PUBLIC_INCLUDES}
