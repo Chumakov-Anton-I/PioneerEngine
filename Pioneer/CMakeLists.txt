@@ -65,6 +65,7 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/MouseButtonCodes.hpp
     include/pioneer/Renderer/GraphicsContext.hpp
     include/pioneer/Renderer/OpenGLContext.hpp
+    include/pioneer/Renderer/Shader.hpp
 )
 #set(PIONEER_PRIVATE_INCLUDES    src/)
 set(PIONEER_PRIVATE_SOURCES
@@ -78,6 +79,7 @@ set(PIONEER_PRIVATE_SOURCES
     src/Support.cpp
     src/Renderer/GraphicsContext.cpp
     src/Renderer/OpenGLContext.cpp
+    src/Renderer/Shader.cpp
 )
 set(PIONEER_SOURCES
     ${PIONEER_PUBLIC_INCLUDES}

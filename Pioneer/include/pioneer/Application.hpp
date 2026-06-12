@@ -31,6 +31,7 @@ class Window;
 class Event;
 class WindowCloseEvent;
 class LayerUI;
+class Shader;
 
 /// The Application class, an engine application object.
 /// It is a singleton
@@ -62,6 +63,7 @@ private:
     static Application *s_instance;
 
     unsigned int m_VAO, m_VBO, m_EBO;
+    std::unique_ptr<Shader> m_shader;
 
 private:
     Application(const Application&) = delete;

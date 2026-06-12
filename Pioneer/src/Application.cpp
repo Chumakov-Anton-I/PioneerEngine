@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Events/KeyEvent.hpp>
 #include <pioneer/Events/MouseEvent.hpp>
 #include <pioneer/Input.hpp>
+#include <pioneer/Renderer/Shader.hpp>
 
 #include <glad/glad.h>  // TODO: move out rendering system from Application class
 
@@ -69,6 +70,27 @@ Application::Application(int &argc, char *argv[])
 
     unsigned int indices[] = { 0, 1, 2 };
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    std::string vshaderSrc = R"(
+        #version 400 core
+        layout (location = 0) in vec3 a_position;
+        out vec3 v_position;
+        void main()
+        {
+            v_position = a_position;
+            gl_Position = vec4(a_position, 1.0);
+        }
+    )";
+    std::string fshaderSrc = R"(
+        #version 400 core
+        layout (location = 0) out vec4 color;
+        in vec3 v_position;
+        void main()
+        {
+            color = vec4(v_position * 0.5 + 0.5, 1.0);
+        }
+    )";
+    m_shader.reset(new Shader(vshaderSrc, fshaderSrc));
 }
 
 Application::~Application()
@@ -80,9 +102,10 @@ int Application::exec()
 {
     while (!m_windowShouldClose)
     {
-        glClearColor(0.3f, 0.3f, 0.5f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        m_shader->bind();
         glBindVertexArray(m_VAO);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
