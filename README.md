@@ -17,12 +17,13 @@ It also uses STL as logn as it's possible.
 | Library                                    | Description              | License |
 |--------------------------------------------|--------------------------|---------|
 | [spdlog](https://github.com/gabime/spdlog) | Fast C++ logging library | MIT     |
+| [glad](https://github.com/Dav1dde/glad) | OpenGL Loader-Generator based on the official specifications | MIT |
 | [GLFW](https://github.com/glfw/glfw) | Multi-platform library for OpenGL and Vulkan development on the desktop. | zlib |
 | [sigslot](https://github.com/palacaze/sigslot) | Header-only, thread safe implementation of signal-slots for C++ | MIT |
 | [Dear ImGui](https://github.com/ocornut/imgui) | Bloat-free graphical user interface library | MIT |
 | [GLM](https://github.com/g-truc/glm) | Header only C++ mathematics library for graphics software | MIT |
 
-The all third-party libraries are included as submodules.
+The all third-party libraries are included as submodules except for `glad`.
 
 ## Building
 

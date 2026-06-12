@@ -61,6 +61,8 @@ private:
 
     static Application *s_instance;
 
+    unsigned int m_VAO, m_VBO, m_EBO;
+
 private:
     Application(const Application&) = delete;
     Application(Application &&) = delete;

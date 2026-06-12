@@ -82,7 +82,7 @@ bool Window::isVSync() const
 
 int Window::init()
 {
-    glfwSetErrorCallback([](int error_code, const char *description)
+    glfwSetErrorCallback([]([[maybe_unused]] int error_code, [[maybe_unused]] const char *description)
         {
             PNR_CORE_FATAL("GLFW error {0}: {1}", error_code, description);
         });
