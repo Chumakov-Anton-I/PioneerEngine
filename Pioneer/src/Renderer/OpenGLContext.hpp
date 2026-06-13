@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef PIONEER_OPENGL_CONTEXT_HPP
 #define PIONEER_OPENGL_CONTEXT_HPP
 
-#include <pioneer/Renderer/GraphicsContext.hpp>
+#include "GraphicsContext.hpp"
 
 struct GLFWwindow;
 

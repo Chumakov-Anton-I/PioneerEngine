@@ -63,13 +63,14 @@ set(PIONEER_PUBLIC_INCLUDES
     include/pioneer/Input.hpp
     include/pioneer/KeyCodes.hpp
     include/pioneer/MouseButtonCodes.hpp
-    include/pioneer/Renderer/GraphicsContext.hpp
-    include/pioneer/Renderer/OpenGLContext.hpp
-    include/pioneer/Renderer/Shader.hpp
-    include/pioneer/Renderer/Buffer.hpp
-    include/pioneer/Renderer/Renderer.hpp
 )
-#set(PIONEER_PRIVATE_INCLUDES    src/)
+set(PIONEER_PRIVATE_INCLUDES
+    src/Renderer/GraphicsContext.hpp
+    src/Renderer/OpenGLContext.hpp
+    src/Renderer/Shader.hpp
+    src/Renderer/Buffer.hpp
+    src/Renderer/Renderer.hpp
+)
 set(PIONEER_PRIVATE_SOURCES
     src/Application.cpp
     src/Logger.cpp
@@ -87,7 +88,7 @@ set(PIONEER_PRIVATE_SOURCES
 )
 set(PIONEER_SOURCES
     ${PIONEER_PUBLIC_INCLUDES}
-#    ${PIONEER_PRIVATE_INCLUDES}
+    ${PIONEER_PRIVATE_INCLUDES}
     ${PIONEER_PRIVATE_SOURCES}
 )
 if (PIONEER_BUILD_SHARED_LIB)

@@ -17,8 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include <pioneer/Renderer/Shader.hpp>
-#include <pioneer/Renderer/Buffer.hpp>
+#include "Shader.hpp"
+#include "Buffer.hpp"
 #include <glad/glad.h>
 
 namespace Pioneer

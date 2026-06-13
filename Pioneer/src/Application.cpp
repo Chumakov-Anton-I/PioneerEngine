@@ -25,8 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Events/MouseEvent.hpp>
 #include <pioneer/Input.hpp>
 
-#include <pioneer/Renderer/Shader.hpp>
-#include <pioneer/Renderer/Buffer.hpp>
+#include <Renderer/Shader.hpp>
+#include <Renderer/Buffer.hpp>
 
 #include <glad/glad.h>  // TODO: move out rendering system from Application class
 

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <pioneer/Events/ApplicationEvent.hpp>
 #include <pioneer/Events/MouseEvent.hpp>
 #include <pioneer/Events/KeyEvent.hpp>
-#include <pioneer/Renderer/OpenGLContext.hpp>
+#include <Renderer/OpenGLContext.hpp>
 
 #include <GLFW/glfw3.h>
 
