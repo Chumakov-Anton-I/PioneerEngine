@@ -27,31 +27,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <Renderer/Shader.hpp>
 #include <Renderer/Buffer.hpp>
+#include <Renderer/VertexArrayObject.hpp>
 
 #include <glad/glad.h>  // TODO: move out rendering system from Application class
 
 namespace Pioneer
 {
-
-static GLenum shaderDataTypeToOGLBaseType(ShaderDataType type)
-{
-    switch (type)
-    {
-    case ShaderDataType::Bool:   return GL_BOOL;
-    case ShaderDataType::Int:    return GL_INT;
-    case ShaderDataType::Int2:   return GL_INT;
-    case ShaderDataType::Int3:   return GL_INT;
-    case ShaderDataType::Int4:   return GL_INT;
-    case ShaderDataType::Float:  return GL_FLOAT;
-    case ShaderDataType::Float2: return GL_FLOAT;
-    case ShaderDataType::Float3: return GL_FLOAT;
-    case ShaderDataType::Float4: return GL_FLOAT;
-    case ShaderDataType::Mat3:   return GL_FLOAT;
-    case ShaderDataType::Mat4:   return GL_FLOAT;
-    }
-    PNR_CORE_ASSERT(false, "Unknown ShaderDataType");
-    return 0;
-}
 
 Application *Application::s_instance = nullptr;
 
@@ -69,9 +50,7 @@ Application::Application(int &argc, char *argv[])
     m_layerUI = new LayerUI;
     pushOverlay(m_layerUI);
 
-    // temporary OpenGL stuff
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
+    m_VAO.reset(new VertexArrayObject);
 
     float vertices[] =
     {
@@ -80,34 +59,19 @@ Application::Application(int &argc, char *argv[])
          0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
          0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f
     };
-    m_VBO.reset(new VertexBufferObject(vertices, sizeof(vertices)));
-    m_VBO->bind();
-
-    {
-        BufferLayout layout = {
-            { ShaderDataType::Float3, "a_position" },
-            { ShaderDataType::Float4, "a_color" }
-        };
-        m_VBO->setLayout(layout);
-    }
-
-    uint32_t index = 0;
-    const auto &layout = m_VBO->layout();
-    for (const auto &element : layout)
-    {
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index,
-            element.getComponentCount(),
-            shaderDataTypeToOGLBaseType(element.Type),
-            element.Normalized ? GL_TRUE : GL_FALSE,
-            layout.stride(),
-            (const void*)element.Offset);
-        index++;
-    }
+    auto vbo = std::make_shared<VertexBufferObject>(vertices, sizeof(vertices));
+    vbo->bind();
+    BufferLayout layout = {
+        { ShaderDataType::Float3, "a_position" },
+        { ShaderDataType::Float4, "a_color" }
+    };
+    vbo->setLayout(layout);
+    m_VAO->addVertexBuffer(vbo);
 
     uint32_t indices[] = { 0, 1, 2 };
-    m_EBO.reset(new IndexBufferObject(indices, sizeof(indices) / sizeof(uint32_t)));
-    m_EBO->bind();
+    auto ebo = std::make_shared<IndexBufferObject>(indices, sizeof(indices) / sizeof(uint32_t));
+    ebo->bind();
+    m_VAO->setIndexBuffer(ebo);
 
     std::string vshaderSrc = R"(
         #version 400 core
@@ -149,8 +113,8 @@ int Application::exec()
         glClear(GL_COLOR_BUFFER_BIT);
 
         m_shader->bind();
-        glBindVertexArray(m_VAO);
-        glDrawElements(GL_TRIANGLES, m_EBO->count(), GL_UNSIGNED_INT, nullptr);
+        m_VAO->bind();
+        glDrawElements(GL_TRIANGLES, m_VAO->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 
         for (Layer *layer : m_layerStack)
             layer->onUpdate();

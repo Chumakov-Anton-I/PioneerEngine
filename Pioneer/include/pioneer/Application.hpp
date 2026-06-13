@@ -34,6 +34,7 @@ class LayerUI;
 class Shader;
 class VertexBufferObject;
 class IndexBufferObject;
+class VertexArrayObject;
 
 /// The Application class, an engine application object.
 /// It is a singleton
@@ -64,10 +65,8 @@ private:
 
     static Application *s_instance;
 
-    unsigned int m_VAO;
-    std::unique_ptr<Shader> m_shader;
-    std::unique_ptr<VertexBufferObject> m_VBO;
-    std::unique_ptr<IndexBufferObject> m_EBO;
+    std::shared_ptr<Shader> m_shader;
+    std::shared_ptr<VertexArrayObject> m_VAO;
 
 private:
     Application(const Application&) = delete;
