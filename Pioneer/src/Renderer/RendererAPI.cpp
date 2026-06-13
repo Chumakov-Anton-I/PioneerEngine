@@ -17,24 +17,39 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include "Renderer.hpp"
+#include "RendererAPI.hpp"
+#include "Buffer.hpp"
+#include "VertexArrayObject.hpp"
+
+#include <glad/glad.h>
 
 namespace Pioneer
 {
 
-void Renderer::beginScene()
+RendererAPI::RendererAPI()
 {
 
 }
 
-void Renderer::endScene()
+RendererAPI::~RendererAPI()
 {
 
 }
 
-void Renderer::submit(const std::shared_ptr<VertexArrayObject> &vao)
+void RendererAPI::setClearColor(const glm::vec4 & color)
 {
-    RenderCommand::drawIndexed(vao);
+    glClearColor(color.r, color.g, color.b, color.a);
+}
+
+void RendererAPI::clear()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void RendererAPI::drawIndexed(const std::shared_ptr<VertexArrayObject> &vao)
+{
+    vao->bind();
+    glDrawElements(GL_TRIANGLES, vao->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
 }
 
 }

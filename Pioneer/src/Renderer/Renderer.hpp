@@ -20,22 +20,28 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef PIONEER_RENDERER_HPP
 #define PIONEER_RENDERER_HPP
 
+#include "RenderCommand.hpp"
+
 namespace Pioneer
 {
 
-enum class RendererAPI
-{
-    None = 0,
-    OpenGL,
-    DirectX,
-    Vulkan
-};
+//enum class RendererAPI
+//{
+//    None = 0,
+//    OpenGL,
+//    DirectX,
+//    Vulkan
+//};
+
+class VertexArrayObject;
 
 class Renderer
 {
 public:
-    Renderer();
-    ~Renderer();
+    static void beginScene();
+    static void endScene();
+
+    static void submit(const std::shared_ptr<VertexArrayObject> &vao);
 
 private:
     //

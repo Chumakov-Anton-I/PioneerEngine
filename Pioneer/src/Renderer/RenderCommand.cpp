@@ -17,24 +17,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include "Renderer.hpp"
+#include "RenderCommand.hpp"
 
 namespace Pioneer
 {
 
-void Renderer::beginScene()
-{
+RendererAPI *RenderCommand::s_rendererAPI = new RendererAPI();
 
-}
-
-void Renderer::endScene()
-{
-
-}
-
-void Renderer::submit(const std::shared_ptr<VertexArrayObject> &vao)
-{
-    RenderCommand::drawIndexed(vao);
-}
 
 }

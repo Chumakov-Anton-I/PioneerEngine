@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <Renderer/Buffer.hpp>
 #include <Renderer/VertexArrayObject.hpp>
 
-#include <glad/glad.h>  // TODO: move out rendering system from Application class
+#include <Renderer/Renderer.hpp>
 
 namespace Pioneer
 {
@@ -54,7 +54,6 @@ Application::Application(int &argc, char *argv[])
 
     float vertices[] =
     {
-        // x      y     z       r     g     b     a
         -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,
          0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
          0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f
@@ -109,12 +108,15 @@ int Application::exec()
 {
     while (!m_windowShouldClose)
     {
-        glClearColor(0.2f, 0.2f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        RenderCommand::setClearColor({ 0.2f, 0.2f, 0.1f, 1.0f });
+        RenderCommand::clear();
+
+        Renderer::beginScene();
 
         m_shader->bind();
-        m_VAO->bind();
-        glDrawElements(GL_TRIANGLES, m_VAO->indexBuffer()->count(), GL_UNSIGNED_INT, nullptr);
+        Renderer::submit(m_VAO);
+
+        Renderer::endScene();
 
         for (Layer *layer : m_layerStack)
             layer->onUpdate();

@@ -17,24 +17,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ***************************************************************************** */
 
-#include "Renderer.hpp"
+#ifndef PIONEER_RENDERER_API_HPP
+#define PIONEER_RENDERER_API_HPP
+
+#include <glm/vec4.hpp>
 
 namespace Pioneer
 {
 
-void Renderer::beginScene()
+class VertexArrayObject;
+
+class RendererAPI
 {
+public:
+    RendererAPI();
+    ~RendererAPI();
+
+    void setClearColor(const glm::vec4 &color);
+    void clear();
+
+    void drawIndexed(const std::shared_ptr<VertexArrayObject> &vao);
+
+private:
+
+};
 
 }
 
-void Renderer::endScene()
-{
-
-}
-
-void Renderer::submit(const std::shared_ptr<VertexArrayObject> &vao)
-{
-    RenderCommand::drawIndexed(vao);
-}
-
-}
+#endif // !PIONEER_RENDERER_API_HPP

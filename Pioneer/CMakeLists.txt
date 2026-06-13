@@ -86,6 +86,8 @@ set(PIONEER_PRIVATE_INCLUDES
     src/Renderer/Shader.hpp
     src/Renderer/Buffer.hpp
     src/Renderer/Renderer.hpp
+    src/Renderer/RendererAPI.hpp
+    src/Renderer/RenderCommand.hpp
     src/Renderer/VertexArrayObject.hpp
 )
 set(PIONEER_PRIVATE_SOURCES
@@ -102,6 +104,8 @@ set(PIONEER_PRIVATE_SOURCES
     src/Renderer/Shader.cpp
     src/Renderer/Buffer.cpp
     src/Renderer/Renderer.cpp
+    src/Renderer/RendererAPI.cpp
+    src/Renderer/RenderCommand.cpp
     src/Renderer/VertexArrayObject.cpp
 )
 set(PIONEER_SOURCES
