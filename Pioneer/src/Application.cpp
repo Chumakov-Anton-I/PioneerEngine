@@ -33,6 +33,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+static GLenum shaderDataTypeToOGLBaseType(ShaderDataType type)
+{
+    switch (type)
+    {
+    case ShaderDataType::Bool:   return GL_BOOL;
+    case ShaderDataType::Int:    return GL_INT;
+    case ShaderDataType::Int2:   return GL_INT;
+    case ShaderDataType::Int3:   return GL_INT;
+    case ShaderDataType::Int4:   return GL_INT;
+    case ShaderDataType::Float:  return GL_FLOAT;
+    case ShaderDataType::Float2: return GL_FLOAT;
+    case ShaderDataType::Float3: return GL_FLOAT;
+    case ShaderDataType::Float4: return GL_FLOAT;
+    case ShaderDataType::Mat3:   return GL_FLOAT;
+    case ShaderDataType::Mat4:   return GL_FLOAT;
+    }
+    PNR_CORE_ASSERT(false, "Unknown ShaderDataType");
+    return 0;
+}
+
 Application *Application::s_instance = nullptr;
 
 Application::Application(int &argc, char *argv[])
@@ -55,15 +75,35 @@ Application::Application(int &argc, char *argv[])
 
     float vertices[] =
     {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+        // x      y     z       r     g     b     a
+        -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
+         0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f
     };
     m_VBO.reset(new VertexBufferObject(vertices, sizeof(vertices)));
     m_VBO->bind();
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    {
+        BufferLayout layout = {
+            { ShaderDataType::Float3, "a_position" },
+            { ShaderDataType::Float4, "a_color" }
+        };
+        m_VBO->setLayout(layout);
+    }
+
+    uint32_t index = 0;
+    const auto &layout = m_VBO->layout();
+    for (const auto &element : layout)
+    {
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index,
+            element.getComponentCount(),
+            shaderDataTypeToOGLBaseType(element.Type),
+            element.Normalized ? GL_TRUE : GL_FALSE,
+            layout.stride(),
+            (const void*)element.Offset);
+        index++;
+    }
 
     uint32_t indices[] = { 0, 1, 2 };
     m_EBO.reset(new IndexBufferObject(indices, sizeof(indices) / sizeof(uint32_t)));
@@ -72,9 +112,12 @@ Application::Application(int &argc, char *argv[])
     std::string vshaderSrc = R"(
         #version 400 core
         layout (location = 0) in vec3 a_position;
+        layout (location = 1) in vec4 a_color;
         out vec3 v_position;
+        out vec4 v_color;
         void main()
         {
+            v_color = a_color;
             v_position = a_position;
             gl_Position = vec4(a_position, 1.0);
         }
@@ -83,9 +126,11 @@ Application::Application(int &argc, char *argv[])
         #version 400 core
         layout (location = 0) out vec4 color;
         in vec3 v_position;
+        in vec4 v_color;
         void main()
         {
             color = vec4(v_position * 0.5 + 0.5, 1.0);
+            color = v_color;
         }
     )";
     m_shader.reset(new Shader(vshaderSrc, fshaderSrc));

@@ -23,6 +23,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace Pioneer
 {
 
+BufferLayout::BufferLayout(const std::initializer_list<BufferElement> &elements)
+    : m_elements{ elements }, m_stride{ 0 }
+{
+    calculateOffsetsAndStride();
+}
+
+void BufferLayout::calculateOffsetsAndStride()
+{
+    uint32_t offset = 0;
+    m_stride = 0;
+    for (auto &element : m_elements)
+    {
+        element.Offset = offset;
+        offset += element.Size;
+        m_stride += element.Size;
+    }
+}
+
+// ==== VBO ====
+
 VertexBufferObject::VertexBufferObject(float *vertices, uint32_t size)
 {
     glGenBuffers(1, &m_bufferID);
@@ -43,6 +63,11 @@ void VertexBufferObject::bind() const
 void VertexBufferObject::unbind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void VertexBufferObject::setLayout(const BufferLayout &layout)
+{
+    m_layout = layout;
 }
 
 // ====== Index Buffer Object ======
@@ -68,6 +93,11 @@ void IndexBufferObject::bind() const
 void IndexBufferObject::unbind() const
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void IndexBufferObject::setLayout(const BufferLayout &layout)
+{
+    m_layout = layout;
 }
 
 }
